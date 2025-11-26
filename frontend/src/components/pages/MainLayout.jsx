@@ -18,7 +18,7 @@ export default function MainLayout() {
     return (
         <div className="flex flex-col min-h-screen">
             <Header isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}/>
-            <main onClick={closeMenu} className="mainWindow">
+            <main style={{overflow: 'hidden'}} onClick={closeMenu} className="mainWindow">
                 <Outlet />
             </main>
             <Footer/>
