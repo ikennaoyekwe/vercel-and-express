@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../../layouts/Header.jsx";
 import Footer from "../../layouts/Footer.jsx";
 import { Outlet } from "react-router-dom";
+import "../../assets/css/mainpage.css";
 
 export default function MainLayout() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function MainLayout() {
     return (
         <div className="flex flex-col min-h-screen">
             <Header isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}/>
-            <main onClick={closeMenu} className="flex flex-col text-center min-h-[90vh] bg-gradient-to-bl from-sky-500 to-indigo-500">
+            <main onClick={closeMenu} className="mainWindow">
                 <Outlet />
             </main>
             <Footer/>
