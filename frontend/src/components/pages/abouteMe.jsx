@@ -1,29 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
+import { pageVariants, pageTransition} from "../../utils/framer-motion-objects.js";
 import AboutMe_Slider from './pages_components/aboutMe_Slider.jsx';
 import AboutMe_main from "./pages_components/aboutMe_main.jsx";
 import {motion} from "framer-motion";
 import "../../assets/css/abouteMeStyles.css";
-
-const pageVariants = {
-    initial: {
-        opacity: 0,
-        x: -100
-    },
-    animate: {
-        opacity: 1,
-        x: 0
-    },
-    exit: {
-        opacity: 0,
-        x: 100
-    }
-};
-
-const pageTransition = {
-    type: "tween",
-    ease: "easeInOut",
-    duration: 0.6
-};
 
 export default function AbouteMe() {
 
