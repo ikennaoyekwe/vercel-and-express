@@ -6,7 +6,7 @@ import {AnimatePresence} from "framer-motion";
 import MainLayout from "./components/pages/MainLayout.jsx";
 import NotFound404 from "./components/pages/NotFound404.jsx";
 import MainPage from "./components/pages/MainPage.jsx";
-import AbouteMe from "./components/pages/AbouteMe.jsx";
+import AbouteMe from "./components/pages/abouteMe.jsx";
 import ContactMe from "./components/pages/ContactMe.jsx";
 import TechStack from "./components/pages/TechStack.jsx";
 import Mobile_main_layout from "./components/pages/mobile_view/mobile_main_layout.jsx";
