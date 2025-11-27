@@ -6,8 +6,8 @@ import MainLayout from "./components/pages/MainLayout.jsx";
 import NotFound404 from "./components/pages/NotFound404.jsx";
 import MainPage from "./components/pages/MainPage.jsx";
 import AbouteMe from "./components/pages/abouteMe.jsx";
-import ContactMe from "./components/pages/ContactMe.jsx";
-import TechStack from "./components/pages/TechStack.jsx";
+import ContactMe from "./components/pages/contactMe.jsx";
+import TechStack from "./components/pages/techStack.jsx";
 
 function AnimatedRoutes() {
     const location = useLocation();
