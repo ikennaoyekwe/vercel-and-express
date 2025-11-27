@@ -188,7 +188,8 @@ export default function MainPage() {
 
     return (
         <div>
-            <h1>HEllo Arash Samandar</h1>
+            <h1>HEllo Arash Samandar</h1><br>
+            <h1>How are you doing :)</h1>
             <div className="flex flex-col text-center min-h-[90vh] justify-center items-center">
                 <div className="w-1/4 min-w-[350px] z-20">
                     <svg
