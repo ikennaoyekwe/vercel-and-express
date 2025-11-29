@@ -27,6 +27,7 @@ export default function ThreejsCube() {
             mountRef.current.clientWidth,
             mountRef.current.clientHeight
         );
+
         mountRef.current.appendChild(renderer.domElement);
 
         // Cube geometry & material (simple = WebGL1 safe)
@@ -50,14 +51,13 @@ export default function ThreejsCube() {
             renderer.dispose();
             geometry.dispose();
             material.dispose();
-            mountRef.current.removeChild(renderer.domElement);
         };
     }, []);
 
     return (
         <div
             ref={mountRef}
-            style={{ width: "100%", height: "400px", background: "#111" }}
+            style={{ width: "100%", height: "400px" }}
         />
     );
 }
