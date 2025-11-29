@@ -27,6 +27,7 @@ export default function Header({ isMenuOpen, toggleMenu }) {
                             <CustomLink to="/aboutMe" name="About Me" />
                             <CustomLink to="/techStacks" name="Tech stack" />
                             <CustomLink to="/contactMe" name="Contact" />
+                            <CustomLink to="/play" name="Play" />
                         </ul>
                     </div>
                 </div>

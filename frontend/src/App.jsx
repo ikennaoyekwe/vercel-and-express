@@ -8,6 +8,7 @@ import MainPage from "./components/pages/MainPage.jsx";
 import AbouteMe from "./components/pages/abouteMe.jsx";
 import ContactMe from "./components/pages/contactMe.jsx";
 import TechStack from "./components/pages/techStack.jsx";
+import PlayGround from "./components/pages/PlayGround.jsx";
 
 function AnimatedRoutes() {
     const location = useLocation();
@@ -20,6 +21,7 @@ function AnimatedRoutes() {
                     <Route path="/aboutMe" element={<AbouteMe/>}/>
                     <Route path="/contactMe" element={<ContactMe/>}/>
                     <Route path="/techStacks" element={<TechStack/>}/>
+                    <Route path="/play" element={<PlayGround />}/>
 
                     <Route path="*" element={<NotFound404/>}/>
 
