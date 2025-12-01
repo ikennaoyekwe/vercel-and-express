@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as THREE from "three";
-import "./waves.js";
+// import "./waves.js";
 
 export default function MovingWave() {
 
