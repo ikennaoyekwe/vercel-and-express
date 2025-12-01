@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Header from "../../layouts/Header.jsx";
-import Footer from "../../layouts/Footer.jsx";
+import Header from "./Header.jsx";
+import Footer from "./Footer.jsx";
 import { Outlet } from "react-router-dom";
-import "../../assets/css/mainpage.css";
+import "../assets/css/mainpage.css";
 
 export default function MainLayout() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

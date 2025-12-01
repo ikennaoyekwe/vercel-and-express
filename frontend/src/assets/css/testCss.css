@@ -1,0 +1,53 @@
+.v-container {
+    width: 100%;
+    height: 400px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.v-scene {
+    perspective: 800px; /* Essential for 3D effect */
+}
+
+.v-word-box {
+    position: relative;
+    transform-style: preserve-3d; /* Crucial: Allows children to exist in 3D space */
+    animation: rotateText 6s linear infinite;
+}
+
+.v-layer {
+    font-family: Arial, sans-serif;
+    font-weight: 900; /* Thicker fonts look better in 3D */
+    font-size: 100px;
+    position: absolute; /* Stack them on top of each other */
+    top: 50%;
+    left: 50%;
+    /* Center the text perfectly */
+    transform-origin: center center;
+    /* We use translate(-50%, -50%) to center the span,
+       but we must keep the translateZ from the inline styles!
+       Using separate properties helps avoid conflicts. */
+    translate: -50% -50%;
+
+    /* Prevent selectable text cursor */
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Add the glow ONLY to the front layer (first child) to save performance */
+.v-layer:first-child {
+    text-shadow: 0 0 20px #00ffff;
+    z-index: 10; /* Ensure front face is on top */
+}
+
+@keyframes rotateText {
+    0% {
+        transform: rotateY(0deg) rotateX(10deg); /* Slight tilt to see depth better */
+    }
+    100% {
+        transform: rotateY(360deg) rotateX(10deg);
+    }
+}

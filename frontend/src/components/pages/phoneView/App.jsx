@@ -9,9 +9,9 @@ import MainPage from "./components/pages/MainPage.jsx";
 import AbouteMe from "./components/pages/abouteMe.jsx";
 import ContactMe from "./components/pages/contactMe.jsx";
 import TechStack from "./components/pages/techStack.jsx";
-import Mobile_main_layout from "./components/pages/mobile_view/mobile_main_layout.jsx";
-import Mobile_main_page from "./components/pages/mobile_view/mobile_main_page.jsx";
-import Mobile_aboute_me from "./components/pages/mobile_view/mobile_aboute_me.jsx";
+import Mobile_main_layout from "./components/pages/phoneView/mobile_main_layout.jsx";
+import Mobile_main_page from "./components/pages/phoneView/mobile_main_page.jsx";
+import Mobile_aboute_me from "./components/pages/phoneView/mobile_aboute_me.jsx";
 
 function AnimatedRoutes() {
     const location = useLocation();

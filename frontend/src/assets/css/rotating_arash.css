@@ -1,0 +1,51 @@
+/* The dark background container */
+.hologram-container {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* The 3D Scene setup (The "Camera") */
+.hologram-scene {
+    perspective: 1000px; /* How "deep" the 3D space looks */
+}
+
+/* The Text Object */
+.hologram-text {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 100px;
+    color: white;
+    margin: 0;
+
+    /* The Neon Glow (Cyan) */
+    text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+
+    /* Optimization for old hardware */
+    will-change: transform;
+
+    /* The Animation */
+    animation: spinAndFloat 5s linear infinite;
+}
+
+/* The Animation Keyframes */
+@keyframes spinAndFloat {
+    0% {
+        transform: rotateY(0deg) translateY(0px);
+    }
+    25% {
+        transform: rotateY(90deg) translateY(-20px);
+    }
+    50% {
+        transform: rotateY(180deg) translateY(0px);
+    }
+    75% {
+        transform: rotateY(270deg) translateY(20px);
+    }
+    100% {
+        transform: rotateY(360deg) translateY(0px);
+    }
+}
