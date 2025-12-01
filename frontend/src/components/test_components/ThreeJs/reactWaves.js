@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import chroma from 'https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.3/chroma.min.js';
+import {SimplexNoise} from "https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js";
 
 let conf = {
     fov: 75,
@@ -10,8 +12,7 @@ let conf = {
     light1Color: 0x0E09DC,
     light2Color: 0x1CD1E1,
     light3Color: 0x18C02C,
-    light4Color: 0xee3bcf,
-    ...conf
+    light4Color: 0xee3bcf
 };
 
 let renderer, scene, camera, cameraCtrl;
@@ -51,25 +52,10 @@ function init() {
     });
 
     initScene();
-    initGui();
     animate();
 }
 
-function initGui() {
-    noiseInput.value = 101 - conf.xyCoef;
-    heightInput.value = conf.zCoef * 100 / 25;
 
-    noiseInput.addEventListener('input', e => {
-        conf.xyCoef = 101 - noiseInput.value;
-    });
-    heightInput.addEventListener('input', e => {
-        conf.zCoef = heightInput.value * 25 / 100;
-    });
-
-    document.getElementById('trigger').addEventListener('click', e => {
-        updateLightsColors();
-    });
-}
 
 function initScene() {
     scene = new THREE.Scene();
