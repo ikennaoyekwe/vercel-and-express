@@ -9,6 +9,7 @@ import AbouteMe from "./components/pages/abouteMe.jsx";
 import ContactMe from "./components/pages/contactMe.jsx";
 import TechStack from "./components/pages/techStack.jsx";
 import PlayGround from "./components/pages/PlayGround.jsx";
+import MovingWave from "./components/test_components/ThreeJs/movingWave.jsx";
 
 function AnimatedRoutes() {
     const location = useLocation();
@@ -26,6 +27,7 @@ function AnimatedRoutes() {
                     <Route path="*" element={<NotFound404/>}/>
 
                 </Route>
+                <Route path="/wave" element={<MovingWave />}/>
             </Routes>
         </AnimatePresence>
     )
