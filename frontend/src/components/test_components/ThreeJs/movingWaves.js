@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import SimplexNoise from "simplex-noise";
+import chroma from 'chroma-js';
 
 let conf = {
     fov: 75,
@@ -10,8 +12,7 @@ let conf = {
     light1Color: 0x0E09DC,
     light2Color: 0x1CD1E1,
     light3Color: 0x18C02C,
-    light4Color: 0xee3bcf,
-    ...conf
+    light4Color: 0xee3bcf
 };
 
 let renderer, scene, camera, cameraCtrl;
@@ -21,25 +22,26 @@ const TMath = THREE.Math;
 let plane;
 const simplex = new SimplexNoise();
 
+const lightDistance = 500;
+let light1 = new THREE.PointLight(conf.light1Color, conf.lightIntensity, lightDistance);
+let light2 = new THREE.PointLight(conf.light2Color, conf.lightIntensity, lightDistance);
+let light3 = new THREE.PointLight(conf.light3Color, conf.lightIntensity, lightDistance);
+let light4 = new THREE.PointLight(conf.light4Color, conf.lightIntensity, lightDistance);
+
 const mouse = new THREE.Vector2();
 const mousePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 const mousePosition = new THREE.Vector3();
 const raycaster = new THREE.Raycaster();
 
-const noiseInput = document.getElementById('noiseInput');
-const heightInput = document.getElementById('heightInput');
-
-init();
-
-function init() {
-    renderer = new THREE.WebGLRenderer({canvas: document.getElementById(conf.el), antialias: true, alpha: true});
+export function init(canvasRef) {
+    renderer = new THREE.WebGLRenderer({canvas: canvasRef.current, antialias: true, alpha: true});
     camera = new THREE.PerspectiveCamera(conf.fov);
     camera.position.z = conf.cameraZ;
 
-    updateSize();
-    window.addEventListener('resize', updateSize, false);
+    updateSize(canvasRef);
+    canvasRef.current.addEventListener('resize', updateSize, false);
 
-    document.addEventListener('mousemove', e => {
+    canvasRef.current.addEventListener('mousemove', e => {
         const v = new THREE.Vector3();
         camera.getWorldDirection(v);
         v.normalize();
@@ -51,25 +53,11 @@ function init() {
     });
 
     initScene();
-    initGui();
     animate();
 }
 
-function initGui() {
-    noiseInput.value = 101 - conf.xyCoef;
-    heightInput.value = conf.zCoef * 100 / 25;
-
-    noiseInput.addEventListener('input', e => {
-        conf.xyCoef = 101 - noiseInput.value;
-    });
-    heightInput.addEventListener('input', e => {
-        conf.zCoef = heightInput.value * 25 / 100;
-    });
-
-    document.getElementById('trigger').addEventListener('click', e => {
-        updateLightsColors();
-    });
-}
+// @todo no need to run "init" here
+// init();
 
 function initScene() {
     scene = new THREE.Scene();
@@ -90,21 +78,14 @@ function initScene() {
 function initLights() {
     const r = 30;
     const y = 10;
-    const lightDistance = 500;
-
     // light = new THREE.AmbientLight(conf.ambientColor);
     // scene.add(light);
-
-    light1 = new THREE.PointLight(conf.light1Color, conf.lightIntensity, lightDistance);
     light1.position.set(0, y, r);
     scene.add(light1);
-    light2 = new THREE.PointLight(conf.light2Color, conf.lightIntensity, lightDistance);
     light2.position.set(0, -y, -r);
     scene.add(light2);
-    light3 = new THREE.PointLight(conf.light3Color, conf.lightIntensity, lightDistance);
     light3.position.set(r, y, 0);
     scene.add(light3);
-    light4 = new THREE.PointLight(conf.light4Color, conf.lightIntensity, lightDistance);
     light4.position.set(-r, y, 0);
     scene.add(light4);
 }
@@ -119,13 +100,12 @@ function animate() {
 };
 
 function animatePlane() {
-    gArray = plane.geometry.attributes.position.array;
+    let gArray = plane.geometry.attributes.position.array;
     const time = Date.now() * 0.0002;
     for (let i = 0; i < gArray.length; i += 3) {
         gArray[i + 2] = simplex.noise4D(gArray[i] / conf.xyCoef, gArray[i + 1] / conf.xyCoef, time, mouse.x + mouse.y) * conf.zCoef;
     }
     plane.geometry.attributes.position.needsUpdate = true;
-    // plane.geometry.computeBoundingSphere();
 }
 
 function animateLights() {
@@ -141,22 +121,10 @@ function animateLights() {
     light4.position.z = Math.cos(time * 0.8) * d;
 }
 
-function updateLightsColors() {
-    conf.light1Color = chroma.random().hex();
-    conf.light2Color = chroma.random().hex();
-    conf.light3Color = chroma.random().hex();
-    conf.light4Color = chroma.random().hex();
-    light1.color = new THREE.Color(conf.light1Color);
-    light2.color = new THREE.Color(conf.light2Color);
-    light3.color = new THREE.Color(conf.light3Color);
-    light4.color = new THREE.Color(conf.light4Color);
-    // console.log(conf);
-}
-
-function updateSize() {
-    width = window.innerWidth;
+function updateSize(canvasRef) {
+    width = canvasRef.current.clientWidth;
     cx = width / 2;
-    height = window.innerHeight;
+    height = canvasRef.current.clientHeight;
     cy = height / 2;
     if (renderer && camera) {
         renderer.setSize(width, height);
@@ -174,5 +142,42 @@ function getRendererSize() {
     const height = 2 * Math.tan(vFOV / 2) * Math.abs(conf.cameraZ);
     const width = height * cam.aspect;
     return [width, height];
+}
+
+
+
+
+
+// ------------------------------------------------------ For Update Using Input ------------------------------------------------------
+
+const noiseInput = document.getElementById('noiseInput');
+const heightInput = document.getElementById('heightInput');
+
+function initGui() {
+    noiseInput.value = 101 - conf.xyCoef;
+    heightInput.value = conf.zCoef * 100 / 25;
+
+    noiseInput.addEventListener('input', e => {
+        conf.xyCoef = 101 - noiseInput.value;
+    });
+    heightInput.addEventListener('input', e => {
+        conf.zCoef = heightInput.value * 25 / 100;
+    });
+
+    document.getElementById('trigger').addEventListener('click', e => {
+        updateLightsColors();
+    });
+}
+
+function updateLightsColors() {
+    conf.light1Color = chroma.random().hex();
+    conf.light2Color = chroma.random().hex();
+    conf.light3Color = chroma.random().hex();
+    conf.light4Color = chroma.random().hex();
+    light1.color = new THREE.Color(conf.light1Color);
+    light2.color = new THREE.Color(conf.light2Color);
+    light3.color = new THREE.Color(conf.light3Color);
+    light4.color = new THREE.Color(conf.light4Color);
+    // console.log(conf);
 }
 
