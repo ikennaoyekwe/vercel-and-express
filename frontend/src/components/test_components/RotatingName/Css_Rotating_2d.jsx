@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../assets/css/testCss.css";
+import "../../../assets/css/css_rotating_name.css";
 
 export default function Css_Rotating_2d() {
     const text = "ARASH";

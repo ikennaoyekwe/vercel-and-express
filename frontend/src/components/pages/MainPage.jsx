@@ -15,14 +15,14 @@ export default function MainPage() {
 
     return (
         <div>
-            <div className="flex flex-col text-center min-h-[90vh] justify-center items-center">
-                <div className="w-1/4 min-w-[350px] z-20">
+            <div className="flex flex-col text-center min-h-[87.4vh] justify-center items-center">
+                <div className="w-1/4 min-w-[350px]">
                     <Svg_mainPage />
                 </div>
                 <MovingWave/>
                 <canvas
                     ref={canvasRef}
-                    className="fixed top-0 left-0 z-0 w-full h-full pointer-events-none"
+                    className="fixed top-0 left-0 w-full h-full pointer-events-none"
                 />
             </div>
         </div>

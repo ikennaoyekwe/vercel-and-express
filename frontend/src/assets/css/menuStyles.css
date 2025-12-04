@@ -1,0 +1,36 @@
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.gradient-shadow {
+    position: relative;
+}
+
+.gradient-shadow::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(90deg, #1e40af, #3b82f6, #60a5fa, #93c5fd, #3b82f6, #1e40af);
+    background-size: 200% 200%;
+    animation: gradient-shift 4s ease infinite;
+    filter: blur(15px);
+    opacity: 0.7;
+    border-radius: 0 0 20px 20px;
+}
+
+.glass-effect {
+    background: rgba(31, 41, 55, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}

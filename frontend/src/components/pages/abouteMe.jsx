@@ -3,7 +3,6 @@ import { pageVariants, pageTransition} from "../../utils/framer-motion-objects.j
 import AboutMe_Slider from './pages_components/aboutMe_Slider.jsx';
 import AboutMe_main from "./pages_components/aboutMe_main.jsx";
 import {motion} from "framer-motion";
-import "../../assets/css/abouteMeStyles.css";
 
 export default function AbouteMe() {
 
@@ -86,6 +85,23 @@ export default function AbouteMe() {
 
     return (
         <motion.div initial="initial" animate="animate" exit="exit" variants={pageVariants} transition={pageTransition}>
+
+            <style>{`
+                @keyframes squareAppear {
+                    0% {
+                        opacity: 0;
+                        transform: scale(0) rotate(0deg);
+                    }
+                    20% {
+                        opacity: 1;
+                        transform: scale(0.5) rotate(180deg);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: scale(1) rotate(360deg);
+                    }
+                }
+            `}</style>
 
             <div className="relative justify-center text-center items-center">
                 {shapes.map(shape => (
