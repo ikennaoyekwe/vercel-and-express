@@ -3,46 +3,10 @@ import {Link} from "react-router-dom";
 import CustomLink from "./CustomLink.jsx";
 import SvgImage from "../components/pages/pages_components/svg_image.jsx";
 
-export default function Header({ isMenuOpen, toggleMenu }) {
+export default function MobileHeader({ isMenuOpen, toggleMenu }) {
 
     return (
         <>
-            <style>
-                {`
-                    @keyframes gradient-shift {
-                        0% {
-                            background-position: 0% 50%;
-                        }
-                        50% {
-                            background-position: 100% 50%;
-                        }
-                        100% {
-                            background-position: 0% 50%;
-                        }
-                    }
-
-                    .gradient-shadow {
-                        position: relative;
-                    }
-
-                    .gradient-shadow::after {
-                        content: '';
-                        position: absolute;
-                        top: 100%;
-                        left: 0;
-                        right: 0;
-                        height: 20px;
-                        background: linear-gradient(90deg, #1e40af, #3b82f6, #60a5fa, #93c5fd, #3b82f6, #1e40af);
-                        background-size: 200% 200%;
-                        animation: gradient-shift 4s ease infinite;
-                        filter: blur(15px);
-                        opacity: 0.7;
-                        z-index: -1;
-                    }
-
-                    
-                `}
-            </style>
             <div className="bg-gray-800 items-center justify-center">
 
                 <header className="sticky top-0 z-20 drop-shadow-lg text-center gradient-shadow border-b border-gray-600/30">
@@ -51,6 +15,7 @@ export default function Header({ isMenuOpen, toggleMenu }) {
                             <Link to="/" name="main page">
                                 <SvgImage/>
                             </Link>
+                            {/* Mobile Menu Toggle Button */}
                             <div className="md:hidden">
                                 <button
                                     onClick={toggleMenu}
@@ -61,6 +26,7 @@ export default function Header({ isMenuOpen, toggleMenu }) {
                                     </svg>
                                 </button>
                             </div>
+                            {/* Desktop Menu */}
                             <div className="hidden md:block">
                                 <ul className="flex space-x-4 items-center">
                                     <CustomLink to="/aboutMe" name="About Me" />
