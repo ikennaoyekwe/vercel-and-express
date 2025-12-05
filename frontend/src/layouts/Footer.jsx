@@ -7,7 +7,6 @@ export default function Footer() {
             <div className="flex flex-col justify-center items-center h-full text-center text-shadow text-white">
                 <div>
                     <span>Arash's About Me Website ( under construction )</span>
-                    <Link to="/aboutme" className="ml-2">About Me</Link>
                 </div>
             </div>
         </div>
