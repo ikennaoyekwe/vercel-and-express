@@ -19,6 +19,12 @@ export default function VerticalHangingMenu() {
         {name: "Contact", color: "#8b5cf6"},
     ];
 
+    const moveBg = (e) => {
+        const rect = e.target.getBoundingClientRect();
+        e.target.style.setProperty('--x', (e.clientX - rect.x) / rect.width * 100);
+        e.target.style.setProperty('--y', (e.clientY - rect.y) / rect.height * 100);
+    };
+
     useEffect(() => {
         hoveredItemRef.current = hoveredItem;
     }, [hoveredItem]);
@@ -168,22 +174,55 @@ export default function VerticalHangingMenu() {
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}>
 
-                    <button className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}
-                            style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)", opacity: 0.5,}}>
+                    <svg style={{ position: 'absolute'}}>
+                        <filter id="goo">
+                            <feComponentTransfer>
+                                <feFuncA type="discrete" tableValues="0 1" />
+                            </feComponentTransfer>
+                            <feGaussianBlur stdDeviation="5" />
+                            <feComponentTransfer>
+                                <feFuncA type="table" tableValues="-5 11" />
+                            </feComponentTransfer>
+                        </filter>
+                    </svg>
 
-                        <span>{item.name}</span>
-
-                        <div
-                            className="absolute inset-0 -z-10 rounded-lg transition-all duration-300 border border-white/10 backdrop-blur-sm"
-                            style={{
-                                backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(0, 0, 0, 0.1)",
-                                borderColor: hoveredItem === idx ? item.color : "rgba(0,0,0,0.8)",
-                                boxShadow: hoveredItem === idx ? `0 0 20px ${item.color}40` : "none",}}
-                        />
-                    </button>
+                    <div className="">
+                        <button
+                            className="gooey-button"
+                            onClick={() => console.log('Button clicked!')}
+                            onPointerMove={moveBg}
+                        >
+                            {item.name}
+                        </button>
+                    </div>
 
                 </div>
             ))}
+
+            {/*{menuItems.map((item, idx) => (*/}
+            {/*    <div*/}
+            {/*        key={item.name}*/}
+            {/*        ref={(el) => (menuItemsRef.current[idx] = el)}*/}
+            {/*        className="absolute top-0 left-0 pointer-events-auto flex pr-3.5"*/}
+            {/*        onMouseEnter={() => setHoveredItem(idx)}*/}
+            {/*        onMouseLeave={() => setHoveredItem(null)}>*/}
+
+            {/*        <button className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}*/}
+            {/*                style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)", opacity: 0.5,}}>*/}
+
+            {/*            <span>{item.name}</span>*/}
+
+            {/*            <div*/}
+            {/*                className="absolute inset-0 -z-10 rounded-lg transition-all duration-300 border border-white/10 backdrop-blur-sm"*/}
+            {/*                style={{*/}
+            {/*                    backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(0, 0, 0, 0.1)",*/}
+            {/*                    borderColor: hoveredItem === idx ? item.color : "rgba(0,0,0,0.8)",*/}
+            {/*                    boxShadow: hoveredItem === idx ? `0 0 20px ${item.color}40` : "none",}}*/}
+            {/*            />*/}
+            {/*        </button>*/}
+
+            {/*    </div>*/}
+            {/*))}*/}
 
 
         </div>
