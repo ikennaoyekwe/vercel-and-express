@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
+import "../assets/css/googooliButton.css";
 
 export default function VerticalHangingMenu() {
+
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
     const menuItemsRef = useRef([]);
@@ -162,31 +164,28 @@ export default function VerticalHangingMenu() {
                 <div
                     key={item.name}
                     ref={(el) => (menuItemsRef.current[idx] = el)}
-                    className="absolute top-0 left-0 pointer-events-auto flex items-center justify-end pr-6 will-change-transform"
+                    className="absolute top-0 left-0 pointer-events-auto flex pr-3.5"
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}>
-                    <button
-                        className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}
-                        style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)",}}>
-            <span
-                className="font-bold tracking-wide whitespace-nowrap transition-colors duration-300"
-                style={{
-                    color: hoveredItem === idx ? item.color : "#FFFFFF",
-                    textShadow: hoveredItem === idx ? `0 0 20px ${item.color}` : "none",
-                }}>
-              {item.name}
-            </span>
+
+                    <button className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}
+                            style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)", opacity: 0.5,}}>
+
+                        <span>{item.name}</span>
+
                         <div
                             className="absolute inset-0 -z-10 rounded-lg transition-all duration-300 border border-white/10 backdrop-blur-sm"
                             style={{
-                                backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(15, 23, 42, 0.6)",
-                                borderColor: hoveredItem === idx ? item.color : "rgba(255,255,255,0.1)",
-                                boxShadow: hoveredItem === idx ? `0 0 20px ${item.color}40` : "none",
-                            }}
+                                backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(0, 0, 0, 0.1)",
+                                borderColor: hoveredItem === idx ? item.color : "rgba(0,0,0,0.8)",
+                                boxShadow: hoveredItem === idx ? `0 0 20px ${item.color}40` : "none",}}
                         />
                     </button>
+
                 </div>
             ))}
+
+
         </div>
     );
 }
