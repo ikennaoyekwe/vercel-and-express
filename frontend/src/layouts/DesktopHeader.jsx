@@ -1,9 +1,23 @@
 import React, {useEffect, useRef, useState} from "react";
 import hanging_String, {menuItems, menuButtons} from "../assets/js/hanging_String.jsx";
-import returnIcon from "../assets/js/headerIcons.js";
 import {useLocation} from "react-router-dom";
+import about from "../assets/images/man.webp";
+import contact from "../assets/images/contact_email_icon.webp";
+import tech from "../assets/images/technology_stack.webp";
+import error from "../assets/images/error.webp";
 
 export default function VerticalHangingMenu() {
+
+    const iconMap = {
+        "/": {imgSrc: about, imgAlt: "Home", imgWidth: "50px", imgHeight: "50px"},
+        "/aboutMe": {imgSrc: about, imgAlt: "About Me"},
+        "/contactMe": {imgSrc: contact, imgAlt: "Contact & email"},
+        "/techStacks": {imgSrc: tech, imgAlt: "Tech Stack"},
+    }
+
+    function returnIcon(pathname) {
+        return iconMap[pathname] || {imgSrc: error, imgAlt: "Error"}
+    }
 
     const location = useLocation();
     const {imgSrc, imgAlt, imgWidth = "60px", imgHeight = "60px"} = returnIcon(location.pathname);
