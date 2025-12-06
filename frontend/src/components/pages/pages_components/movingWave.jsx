@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { init } from "./movingWaves.js";
-import MyThreeJs from "./myThreeJs.jsx";
+import { init } from "./js/movingWaves.js";
 
 export default function MovingWave() {
     const canvasRef = useRef(null);

@@ -1,0 +1,180 @@
+import React from "react";
+import {Link} from "react-router-dom";
+
+export const menuItems = [
+    {name: "Home", color: "#ef4444", path: "/"},
+    {name: "About Me", color: "#3b82f6", path: "/aboutMe"},
+    {name: "Tech Stack", color: "#10b981", path: "/techStacks"},
+    {name: "Contact", color: "#8b5cf6", path: "/contactMe"},
+]
+
+export function menuButtons(hoveredItem, menuItemsRef, setHoveredItem) {
+    return(
+
+        menuItems.map((item, idx) => (
+                <div
+                    key={item.name}
+                    ref={(el) => (menuItemsRef.current[idx] = el)}
+                    className="absolute top-0 left-0 pointer-events-auto flex pr-3.5"
+                    onMouseEnter={() => setHoveredItem(idx)}
+                    onMouseLeave={() => setHoveredItem(null)}>
+                    <Link to={item.path} name="About Me">
+                    <button className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}
+                            style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)", opacity: 0.5,}}>
+
+                        <span style={{color: "black", fontWeight: hoveredItem === idx ? "bold" : "normal"}}>{item.name}</span>
+
+                        <div
+                            className="absolute inset-0 -z-10 rounded-lg transition-all duration-300 border border-white/10"
+                            style={{
+                                backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(0, 0, 0, 0.1)",
+                                borderColor: hoveredItem === idx ? item.color : "rgba(0,0,0,0.8)",
+                                boxShadow: hoveredItem === idx ? `6px 2px 5px 0px ${item.color}` : ""
+                            }}
+                        />
+                    </button>
+                    </Link>
+                </div>
+            )
+        )
+    )
+}
+
+
+export default function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef) {
+    const ctx = canvas.getContext("2d", { alpha: true });
+
+    const resizeCanvas = () => {
+        const { width, height } = container.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let time = 0;
+
+    const getWaveX = (y, t) => {
+        const height = canvas.offsetHeight;
+        const width = canvas.offsetWidth;
+        const normalized = y / height;
+        const baseX = width - 50;
+        const sway = Math.sin(t * 0.8) * 20 * normalized;
+        const ripple = Math.cos(normalized * Math.PI * 5 - t * 2) * 5;
+        const hoverEffect = hoveredItemRef.current !== null ? Math.sin(t * 10) * 2 : 0;
+        const dampener = normalized;
+        return baseX + (sway + ripple + hoverEffect) * dampener;
+    };
+
+    const animate = () => {
+        const width = canvas.offsetWidth;
+        const height = canvas.offsetHeight;
+        const baseX = width - 50;
+
+        // Stop string 50px before bottom to fit the icon
+        const stringLength = height - 50;
+
+        ctx.clearRect(0, 0, width, height);
+        time += 0.02;
+
+        // --- Draw Ceiling Mount ---
+        ctx.fillStyle = "#475569";
+        ctx.beginPath();
+        ctx.rect(baseX - 10, 0, 20, 8);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.fillStyle = "#6366f1";
+        ctx.arc(baseX, 0, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- Draw Ghost Waves ---
+        ctx.lineWidth = 2;
+        ctx.globalAlpha = 0.15;
+        [-8, 8].forEach((offset) => {
+            ctx.beginPath();
+            for (let y = 0; y <= stringLength; y += 5) {
+                const scale = y / height;
+                const x = getWaveX(y, time + offset * 0.002) + offset * scale;
+                if (y === 0) ctx.moveTo(baseX, 0);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        });
+
+        ctx.globalAlpha = 1;
+
+        // --- Draw Main String ---
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#6366f1";
+        ctx.strokeStyle = "gray";
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        ctx.beginPath();
+        ctx.moveTo(baseX, 0);
+        for (let y = 0; y <= stringLength; y += 4) {
+            const x = getWaveX(y, time);
+            ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // --- Draw Hook ---
+        const endX = getWaveX(stringLength, time);
+        ctx.beginPath();
+        ctx.fillStyle = "#6366f1";
+        ctx.arc(endX, stringLength, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- ANIMATE END ICON ---
+        // SAFE CHECK: Ensure endIconRef exists, has a current value, AND has a style property
+        if (endIconRef?.current?.style) {
+            const prevX = getWaveX(stringLength - 5, time);
+            const deltaX = endX - prevX;
+            const deltaY = 5;
+            const angleDeg = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
+
+            endIconRef.current.style.transform =
+                `translate3d(${endX}px, ${stringLength}px, 0) translate(-50%, 0) rotate(${angleDeg}deg)`;
+        }
+
+        // --- UPDATE MENU ITEMS ---
+        const totalItems = menuItems.length; // Ensure this variable is accessible!
+        const startY = 0.15 * height;
+        const endY = 0.85 * stringLength;
+        const totalRange = endY - startY;
+
+        menuItems.forEach((item, idx) => {
+            const step = totalRange / (totalItems - 1);
+            const y = startY + step * idx;
+            const waveX = getWaveX(y, time);
+            const isHovered = hoveredItemRef.current === idx;
+
+            ctx.fillStyle = isHovered ? "#ffffff" : item.color;
+            ctx.shadowColor = item.color;
+            ctx.shadowBlur = isHovered ? 25 : 10;
+            ctx.beginPath();
+            ctx.arc(waveX, y, isHovered ? 6 : 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (menuItemsRef.current[idx]) {
+                menuItemsRef.current[idx].style.transform =
+                    `translate3d(${waveX}px, ${y}px, 0) translate(-100%, -50%)`;
+            }
+        });
+
+        requestRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+        window.removeEventListener("resize", resizeCanvas);
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
+}

@@ -35,7 +35,7 @@
     --spring-duration: 1.66s;
 
     background: transparent;
-    color: hsla(var(--hue), 80%, 30%, 0.7);
+    color: transparent; /* main text color is now transparent */
     font-size: 1.4em;
     position: relative;
     padding: calc(var(--size)) calc(var(--size)*1.5);
@@ -63,12 +63,12 @@
     content: "";
     position: absolute;
     inset: -0.25em -0.25em;
-    filter: blur(7px) url(#goo) drop-shadow(0 .25em .5em hsla(0deg, 0%, 0%, 0));
+    filter: blur(7px) url(#goo) drop-shadow(0 .25em .5em hsla(0deg, 0%, 0%, 100%));
     background-image:
-            linear-gradient(0deg,var(--button),var(--button)),
+            linear-gradient(0deg, var(--item-color), var(--item-color)),
             radial-gradient(
                     40% 70% at calc(var(--x) * 1%) calc(var(--y) * 1%),
-                    hsla(var(--hue), 77%, 77%, var(--a)) 0%,
+                    hsla(0, 0%, 100%, var(--a)) 0%, /* white instead of green */
                     transparent 90%
             );
     background-clip: content-box, border-box;

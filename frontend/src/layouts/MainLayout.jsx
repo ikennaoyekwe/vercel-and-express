@@ -12,7 +12,8 @@ export default function MainLayout() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            { isMobile ? <MobileHeader isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}/> : <DesktopHeader /> }
+            {/*{ isMobile ? <MobileHeader isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}/> : <DesktopHeader /> }*/}
+            <DesktopHeader/>
             <main style={{overflow: 'hidden'}} onClick={closeMenu} className="mainWindow flex-grow">
                 <Outlet />
             </main>

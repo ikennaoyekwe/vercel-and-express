@@ -5,8 +5,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import MyIcon from '../../assets/menu.png';
-import SearchIcon from '../../assets/search.png';
+import MyIcon from '../../assets/images/menu.png';
+import SearchIcon from '../../assets/images/search.png';
 import {useState} from "react";
 import {Drawer, List, ListItem, ListItemText, useMediaQuery} from "@mui/material";
 

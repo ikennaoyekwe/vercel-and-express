@@ -1,161 +1,30 @@
 import React, {useEffect, useRef, useState} from "react";
-import "../assets/css/googooliButton.css";
+import hanging_String, {menuItems, menuButtons} from "../assets/js/hanging_String.jsx";
+import {useLocation} from "react-router-dom";
+import returnIcon from "../components/pages/pages_components/js/headerIcons.js";
 
 export default function VerticalHangingMenu() {
+
+    const location = useLocation();
+    const {src, alt, imgWidth = "60px", imgHeight = "60px"} = returnIcon(location.pathname);
 
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
     const menuItemsRef = useRef([]);
     const requestRef = useRef(null);
+    const hoveredItemRef = useRef(null);
+    const endIconRef = useRef(null);
 
     const [hoveredItem, setHoveredItem] = useState(null);
-    const hoveredItemRef = useRef(null);
 
-    // 1. REMOVED 'position' from data. Only content remains.
-    const menuItems = [
-        {name: "Home", color: "#ef4444"},
-        {name: "About Me", color: "#3b82f6"},
-        {name: "Tech Stack", color: "#10b981"},
-        {name: "Contact", color: "#8b5cf6"},
-    ];
-
-    const moveBg = (e) => {
-        const rect = e.target.getBoundingClientRect();
-        e.target.style.setProperty('--x', (e.clientX - rect.x) / rect.width * 100);
-        e.target.style.setProperty('--y', (e.clientY - rect.y) / rect.height * 100);
-    };
-
-    useEffect(() => {
-        hoveredItemRef.current = hoveredItem;
-    }, [hoveredItem]);
+    useEffect(() => { hoveredItemRef.current = hoveredItem }, [ hoveredItem ]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const container = containerRef.current;
         if (!canvas || !container) return;
-
-        const ctx = canvas.getContext("2d", {alpha: true});
-
-        const resizeCanvas = () => {
-            const {width, height} = container.getBoundingClientRect();
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
-            ctx.scale(dpr, dpr);
-            canvas.style.width = `${width}px`;
-            canvas.style.height = `${height}px`;
-        };
-
-        resizeCanvas();
-        window.addEventListener("resize", resizeCanvas);
-
-        let time = 0;
-
-        const getWaveX = (y, t) => {
-            const height = canvas.offsetHeight;
-            const width = canvas.offsetWidth;
-            const normalized = y / height;
-            const baseX = width - 50;
-            const sway = Math.sin(t * 0.8) * 20 * normalized;
-            const ripple = Math.cos(normalized * Math.PI * 5 - t * 2) * 5;
-            const hoverEffect =
-                hoveredItemRef.current !== null ? Math.sin(t * 10) * 2 : 0;
-            const dampener = normalized;
-            return baseX + (sway + ripple + hoverEffect) * dampener;
-        };
-
-        const animate = () => {
-            const width = canvas.offsetWidth;
-            const height = canvas.offsetHeight;
-            const baseX = width - 50;
-
-            ctx.clearRect(0, 0, width, height);
-            time += 0.02;
-
-            // --- Draw Ceiling Mount ---
-            ctx.fillStyle = "#475569";
-            ctx.beginPath();
-            ctx.rect(baseX - 10, 0, 20, 8);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.fillStyle = "#6366f1";
-            ctx.arc(baseX, 0, 4, 0, Math.PI * 2);
-            ctx.fill();
-
-            // --- Draw Ghost Waves ---
-            ctx.lineWidth = 2;
-            ctx.globalAlpha = 0.15;
-            [-8, 8].forEach((offset) => {
-                ctx.beginPath();
-                ctx.strokeStyle = "#818cf8";
-                for (let y = 0; y <= height; y += 5) {
-                    const scale = y / height;
-                    const x = getWaveX(y, time + offset * 0.002) + offset * scale;
-                    if (y === 0) ctx.moveTo(baseX, 0);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.stroke();
-            });
-
-            ctx.globalAlpha = 1;
-
-            // --- Draw Main String ---
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = "#6366f1";
-            ctx.strokeStyle = "#6366f1";
-            ctx.lineWidth = 4;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.beginPath();
-            ctx.moveTo(baseX, 0);
-            for (let y = 0; y <= height; y += 4) {
-                const x = getWaveX(y, time);
-                ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // --- 2. CALCULATE POSITIONS DYNAMICALLY ---
-            const totalItems = menuItems.length;
-            // Define range: Start at 15% height, end at 90% height
-            const startY = 0.15;
-            const endY = 0.9;
-            const totalRange = endY - startY;
-
-            menuItems.forEach((item, idx) => {
-                // Calculate normalized position (0.0 to 1.0) based on index
-                const step = totalRange / (totalItems - 1);
-                const normalizedPos = startY + step * idx;
-
-                const y = normalizedPos * height;
-                const waveX = getWaveX(y, time);
-                const isHovered = hoveredItemRef.current === idx;
-
-                // Canvas Dot
-                ctx.fillStyle = isHovered ? "#ffffff" : item.color;
-                ctx.shadowColor = item.color;
-                ctx.shadowBlur = isHovered ? 25 : 10;
-
-                ctx.beginPath();
-                ctx.arc(waveX, y, isHovered ? 6 : 4, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Move DOM Element
-                if (menuItemsRef.current[idx]) {
-                    menuItemsRef.current[
-                        idx
-                        ].style.transform = `translate3d(${waveX}px, ${y}px, 0) translate(-100%, -50%)`;
-                }
-            });
-
-            requestRef.current = requestAnimationFrame(animate);
-        };
-
-        animate();
-
-        return () => {
-            window.removeEventListener("resize", resizeCanvas);
-            if (requestRef.current) cancelAnimationFrame(requestRef.current);
-        };
+        const cleanup = hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
+        return () => cleanup();
     }, []);
 
     return (
@@ -165,66 +34,14 @@ export default function VerticalHangingMenu() {
             aria-label="Side Navigation"
         >
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full block"/>
-
-            {menuItems.map((item, idx) => (
-                <div
-                    key={item.name}
-                    ref={(el) => (menuItemsRef.current[idx] = el)}
-                    className="absolute top-0 left-0 pointer-events-auto flex pr-3.5"
-                    onMouseEnter={() => setHoveredItem(idx)}
-                    onMouseLeave={() => setHoveredItem(null)}>
-
-                    <svg style={{ position: 'absolute'}}>
-                        <filter id="goo">
-                            <feComponentTransfer>
-                                <feFuncA type="discrete" tableValues="0 1" />
-                            </feComponentTransfer>
-                            <feGaussianBlur stdDeviation="5" />
-                            <feComponentTransfer>
-                                <feFuncA type="table" tableValues="-5 11" />
-                            </feComponentTransfer>
-                        </filter>
-                    </svg>
-
-                    <div className="">
-                        <button
-                            className="gooey-button"
-                            onClick={() => console.log('Button clicked!')}
-                            onPointerMove={moveBg}
-                        >
-                            {item.name}
-                        </button>
-                    </div>
-
-                </div>
-            ))}
-
-            {/*{menuItems.map((item, idx) => (*/}
-            {/*    <div*/}
-            {/*        key={item.name}*/}
-            {/*        ref={(el) => (menuItemsRef.current[idx] = el)}*/}
-            {/*        className="absolute top-0 left-0 pointer-events-auto flex pr-3.5"*/}
-            {/*        onMouseEnter={() => setHoveredItem(idx)}*/}
-            {/*        onMouseLeave={() => setHoveredItem(null)}>*/}
-
-            {/*        <button className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}*/}
-            {/*                style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)", opacity: 0.5,}}>*/}
-
-            {/*            <span>{item.name}</span>*/}
-
-            {/*            <div*/}
-            {/*                className="absolute inset-0 -z-10 rounded-lg transition-all duration-300 border border-white/10 backdrop-blur-sm"*/}
-            {/*                style={{*/}
-            {/*                    backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(0, 0, 0, 0.1)",*/}
-            {/*                    borderColor: hoveredItem === idx ? item.color : "rgba(0,0,0,0.8)",*/}
-            {/*                    boxShadow: hoveredItem === idx ? `0 0 20px ${item.color}40` : "none",}}*/}
-            {/*            />*/}
-            {/*        </button>*/}
-
-            {/*    </div>*/}
-            {/*))}*/}
-
-
+            {menuButtons(hoveredItem, menuItemsRef, setHoveredItem)}
+            <div
+                ref={endIconRef}
+                className="absolute top-0 left-0 pointer-events-none origin-top"
+                style={{ willChange: "transform" }}
+            >
+                <img src={src} alt={alt} style={{width: imgWidth, height: imgHeight}} />
+            </div>
         </div>
     );
 }
