@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import hanging_String, {menuItems, menuButtons} from "../assets/js/hanging_String.jsx";
-import {useLocation} from "react-router-dom";
 import returnIcon from "../assets/js/headerIcons.js";
+import {useLocation} from "react-router-dom";
 
 export default function VerticalHangingMenu() {
 
     const location = useLocation();
-    const {src, alt, imgWidth = "60px", imgHeight = "60px"} = returnIcon(location.pathname);
+    const {imgSrc, imgAlt, imgWidth = "60px", imgHeight = "60px"} = returnIcon(location.pathname);
 
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
@@ -40,7 +40,7 @@ export default function VerticalHangingMenu() {
                 className="absolute top-0 left-0 pointer-events-none origin-top"
                 style={{ willChange: "transform" }}
             >
-                <img src={src} alt={alt} style={{width: imgWidth, height: imgHeight}} />
+                <img src={imgSrc} alt={imgAlt} style={{width: imgWidth, height: imgHeight}} />
             </div>
         </div>
     );

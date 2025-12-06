@@ -5,12 +5,12 @@ import tech from "../images/technology_stack.webp";
 import error from "../images/error.webp";
 
 const iconMap = {
-    "/": {src: homeIcon, alt: "Home", imgWidth: "50px", imgHeight: "50px"},
-    "/aboutMe": {src: about, alt: "About Me"},
-    "/contactMe": {src: contact, alt: "Contact & email"},
-    "/techStacks": {src: tech, alt: "Tech Stack"},
+    "/": {imgSrc: about, imgAlt: "Home", imgWidth: "50px", imgHeight: "50px"},
+    "/aboutMe": {imgSrc: about, imgAlt: "About Me"},
+    "/contactMe": {imgSrc: contact, imgAlt: "Contact & email"},
+    "/techStacks": {imgSrc: tech, imgAlt: "Tech Stack"},
 }
 
 export default function returnIcon(pathname) {
-    return iconMap[pathname] || {src: error, alt: "Error"}
+    return iconMap[pathname] || {imgSrc: error, imgAlt: "Error"}
 }
