@@ -14,7 +14,7 @@ export default function MainPage() {
     }, []);
 
     return (
-        <div className="relative">
+        <div>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
                 <div className="w-1/4 min-w-[350px]">
                     <Svg_mainPage />
