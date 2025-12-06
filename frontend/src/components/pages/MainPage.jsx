@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { initParticles } from "../../assets/js/Particles.js"; // Import the new single function
-import Svg_mainPage from "./pages_components/svg_mainPage.jsx";
-import MovingWave from "./pages_components/movingWave.jsx";
+import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
+import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 
 export default function MainPage() {
     const canvasRef = useRef(null);

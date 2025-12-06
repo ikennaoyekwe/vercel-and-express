@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import hanging_String, {menuItems, menuButtons} from "../assets/js/hanging_String.jsx";
 import {useLocation} from "react-router-dom";
-import returnIcon from "../components/pages/pages_components/js/headerIcons.js";
+import returnIcon from "../assets/js/headerIcons.js";
 
 export default function VerticalHangingMenu() {
 

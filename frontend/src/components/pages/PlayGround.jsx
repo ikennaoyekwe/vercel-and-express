@@ -1,7 +1,7 @@
 import React from "react";
 import { pageVariants, pageTransition} from "../../utils/framer-motion-objects.js";
 import {motion} from "framer-motion";
-import MovingWave from "./pages_components/movingWave.jsx";
+import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 
 export default function PlayGround() {
 
