@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { initParticles } from "../../assets/js/Particles.js"; // Import the new single function
+import { initParticles } from "../../assets/js/Particles.js";
 import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
 import MovingWave from "./pages_components/MainPage/movingWave.jsx";
+import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 
 export default function MainPage() {
     const canvasRef = useRef(null);
@@ -13,13 +14,18 @@ export default function MainPage() {
     }, []);
 
     return (
-        <div>
-            <div className="flex flex-col text-center min-h-[68.4vh] justify-center items-center">
+        <div className="relative">
+            <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
                 <div className="w-1/4 min-w-[350px]">
                     <Svg_mainPage />
                 </div>
+                <div className="w-full flex justify-center">
+                    <div className="ml-5 w-full max-w-[420px]">
+                        <TypeWriter/>
+                    </div>
+                </div>
                 <MovingWave/>
-                <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none"/> {/* Particles Canvas */}
+                <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none"/>
             </div>
         </div>
     );
