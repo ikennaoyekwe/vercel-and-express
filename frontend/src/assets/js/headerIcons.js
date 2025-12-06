@@ -5,7 +5,7 @@ import tech from "../images/technology_stack.webp";
 import error from "../images/error.webp";
 
 const iconMap = {
-    "/": {imgSrc: about, imgAlt: "Home", imgWidth: "50px", imgHeight: "50px"},
+    "/": {imgSrc: homeIcon, imgAlt: "Home", imgWidth: "50px", imgHeight: "50px"},
     "/aboutMe": {imgSrc: about, imgAlt: "About Me"},
     "/contactMe": {imgSrc: contact, imgAlt: "Contact & email"},
     "/techStacks": {imgSrc: tech, imgAlt: "Tech Stack"},
