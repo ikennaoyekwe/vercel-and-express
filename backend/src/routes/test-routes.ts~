@@ -16,8 +16,6 @@ router.get('/getIp', (req, res)=>{
     let ip;
     if (typeof forwarded === "string") {
         const ip = forwarded ? forwarded.split(",")[0] : req.socket.remoteAddress;
-    }else{
-        ip = forwarded;
     }
 
     res.json({

@@ -18,9 +18,9 @@ export default function MainPage() {
     useEffect(() => {
         const fetchIp = async () => {
             try{
-                const response = await fetch("/api/tests/checkRoute");
+                const response = await fetch("/api/tests/getIp");
                 const json = await response.json();
-                setUserIp(json.message);
+                setUserIp(json.message + " - " + json.ip);
             }catch (error) {
                 console.log(error);
             }
