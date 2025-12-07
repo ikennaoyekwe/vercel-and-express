@@ -10,13 +10,13 @@ export default function MainPage() {
     useEffect(() => {
         const canvas = canvasRef.current;
         const cleanup = initParticles(canvas);
-        return () => cleanup;
+        return () => cleanup();
     }, []);
 
     return (
         <div>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
-                <div className="w-1/4 min-w-[350px]">
+                <div ref={(node) => window.innerWidth < 700 ? node.classList.add('mt-44') : ''} className="w-1/4 min-w-[350px]">
                     <Svg_mainPage />
                 </div>
                 <div className="w-full flex justify-center">
