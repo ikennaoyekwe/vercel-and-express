@@ -20,7 +20,7 @@ export default function MainPage() {
             try{
                 const response = await fetch("/api/tests/checkRoute");
                 const json = await response.json();
-                setUserIp(json.ip);
+                setUserIp(json.message);
             }catch (error) {
                 console.log(error);
             }
