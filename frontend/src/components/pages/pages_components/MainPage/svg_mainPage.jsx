@@ -1,12 +1,13 @@
 import React from "react";
 
-export default function Svg_mainPage() {
+export default function Svg_mainPage({svgOpacity}) {
     return (
         <svg
             width="100%"
             height="auto"
             viewBox="0 0 1277 232" // Add viewBox for better scaling
             xmlns="http://www.w3.org/2000/svg"
+            style={{opacity: svgOpacity}}
         >
             <defs>
                 <linearGradient id="movingGradientt" x1="0%" y1="0%" x2="100%" y2="100%">

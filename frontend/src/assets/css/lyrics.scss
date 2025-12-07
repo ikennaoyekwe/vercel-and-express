@@ -1,0 +1,71 @@
+$duration-typing: 300ms;
+$duration-background: 1000ms;
+$delay-unit: 100ms;
+$color: #111;
+
+.component {
+    font-family: Courier, Helvetica, sans-serif;
+    padding: .5rem;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 1000px;
+    .typewriter {
+        font-size: 20px;
+        @media(min-width: 600px) {
+            font-size: 30px;
+        }
+        margin: .5rem;
+        padding: 1rem .5rem;
+        text-align: left;
+        font-weight: 300;
+        > span {
+            display: inline-block;
+        }
+        &.animate {
+            > span > i {
+                animation: typewriter $duration-typing forwards, background $duration-background forwards;
+                //  animation: typewriter $duration-typing steps(1) forwards;
+            }
+        }
+        > span > i {
+            opacity: 0;
+            // display: inline-block;
+            color: $color;
+            font-style: normal;
+            font-size: 1em;
+            min-width: .4em;
+            border-radius: 2px;
+            @for $i from 1 through 30 {
+                &:nth-of-type(#{$i}) {
+                    animation-delay: $i*$delay-unit;
+                }
+            }
+        }
+    }
+    .btn-replay {
+        padding: .5rem;
+        background: white;
+        border: 0;
+        box-shadow: 1px 1px 2px #777;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+}
+
+@keyframes typewriter {
+    50% {
+        transform: scale(1.4);
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes background {
+    0% {
+        //text-shadow: 0 0 2rem $color; // expensive anim
+        background: rgba($color,.1);
+        //box-shadow: 0 0 4rem rgba($color,.9); // expensive anim
+    }
+    100% {}
+}

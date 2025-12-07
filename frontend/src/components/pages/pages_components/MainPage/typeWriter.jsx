@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 
-export default function TypeWriter() {
+export default function TypeWriter({svgOpacity}) {
     const [text, setText] = useState('');
     const [showCursor, setShowCursor] = useState(true);
     const fullText = "Senior Web Developer";
@@ -23,8 +23,7 @@ export default function TypeWriter() {
     }, []);
 
     return (
-        <div
-            className="">
+        <div style={{opacity: svgOpacity}}>
             <div
                 className="text-4xl text-left font-bold bg-gradient-to-t from-white via-gray-700 to-gray-300 bg-clip-text text-transparent">
                 {text}

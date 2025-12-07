@@ -1,3 +1,5 @@
+import {useEffect} from "react";
+
 // ------------------------------------------------------------
 //  CONFIGURATION
 // ------------------------------------------------------------
@@ -210,4 +212,12 @@ export function initParticles(canvas) {
         window.removeEventListener('mouseout', handleMouseLeave);
         particlesArray = [];
     };
+}
+
+export default function initialParticlesUseEffect(canvasRef) {
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const cleanup = initParticles(canvas);
+        return () => cleanup();
+    }, []);
 }

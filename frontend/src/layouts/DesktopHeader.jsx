@@ -18,7 +18,7 @@ export default function VerticalHangingMenu() {
     return (
         <div
             ref={containerRef}
-            className="fixed top-0 right-0 h-[25vh] w-48 z-50 pointer-events-none"
+            className="fixed top-0 right-0 h-[25vh] w-48 z-20 pointer-events-none"
             aria-label="Side Navigation"
         >
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full block"/>

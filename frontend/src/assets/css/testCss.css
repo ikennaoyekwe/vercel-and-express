@@ -1,0 +1,8 @@
+
+:root {
+    --myColor: "";
+}
+
+.myContainer:hover {
+    background-color: var(--myColor);
+}
