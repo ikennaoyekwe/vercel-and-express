@@ -14,7 +14,6 @@ export default function VerticalHangingMenu() {
     const requestRef = useRef(null);
     const hoveredItemRef = useRef(null);
     const endIconRef = useRef(null);
-
     const [hoveredItem, setHoveredItem] = useState(null);
 
     useEffect(() => { hoveredItemRef.current = hoveredItem }, [ hoveredItem ]);
@@ -26,6 +25,13 @@ export default function VerticalHangingMenu() {
         const cleanup = hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
         return () => cleanup();
     }, []);
+
+    useEffect(() => {
+       if(window.innerWidth < 700){
+           containerRef.current.classList.remove('h-[25vh]');
+           containerRef.current.classList.add('h-[35vh]');
+       }
+    },[]);
 
     return (
         <div
