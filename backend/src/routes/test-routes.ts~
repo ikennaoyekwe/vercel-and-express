@@ -11,21 +11,19 @@ router.get('/checkRoute', (req, res)=>{
     })
 });
 
-router.get("/getIp", (req, res) => {
-    const forwarded = req.headers["x-forwarded-for"];
+router.get('/getIp', async (req, res)=>{
+    const forwarded = await req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     let ip;
-
     if (typeof forwarded === "string") {
-        ip = forwarded.split(",")[0];
-    } else {
-        ip = req.socket.remoteAddress; // fallback for localhost/dev
+        const ip = await (forwarded ? forwarded.split(",")[0] : req.socket.remoteAddress);
+    }else{
+        ip = forwarded;
     }
 
     res.json({
-        message: "This is the Route for getting IP address",
+        message: 'This is the Route for getting IP address',
         ip: ip,
-    });
+    })
 });
-
 
 export default router;

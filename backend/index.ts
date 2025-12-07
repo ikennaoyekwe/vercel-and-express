@@ -4,6 +4,7 @@ import router from './src/routes/test-routes';
 import mongoRouter from "./src/routes/database-routes";
 import connectToMongoAtlas from "./src/database/mongodb-atlas";
 const app = express();
+app.set("trust proxy", true);
 
 // ----------- middlewares -----------
 

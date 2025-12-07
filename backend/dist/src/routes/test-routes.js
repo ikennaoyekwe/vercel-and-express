@@ -13,4 +13,18 @@ router.get('/checkRoute', (req, res) => {
         message: 'this is a test route arash',
     });
 });
+router.get("/getIp", (req, res) => {
+    const forwarded = req.headers["x-forwarded-for"];
+    let ip;
+    if (typeof forwarded === "string") {
+        ip = forwarded.split(",")[0];
+    }
+    else {
+        ip = req.socket.remoteAddress; // fallback for localhost/dev
+    }
+    res.json({
+        message: "This is the Route for getting IP address",
+        ip: ip,
+    });
+});
 exports.default = router;

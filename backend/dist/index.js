@@ -9,6 +9,7 @@ const test_routes_1 = __importDefault(require("./src/routes/test-routes"));
 const database_routes_1 = __importDefault(require("./src/routes/database-routes"));
 const mongodb_atlas_1 = __importDefault(require("./src/database/mongodb-atlas"));
 const app = (0, express_1.default)();
+app.set("trust proxy", true);
 // ----------- middlewares -----------
 app.use(error_handling_1.default);
 app.use(express_1.default.json());
