@@ -27,4 +27,9 @@ router.get("/getIp", (req, res) => {
         ip: ip,
     });
 });
+router.get("/newRoute", (req, res) => {
+    res.json({
+        message: "this is a new route",
+    });
+});
 exports.default = router;
