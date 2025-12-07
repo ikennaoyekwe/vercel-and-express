@@ -1,5 +1,6 @@
-import React, {useEffect, useRef, useState} from "react";
-import hanging_String, {menuItems, menuButtons} from "../assets/js/hanging_String.jsx";
+import React from "react";
+import verticalMenuUseRefs, {changeWithForMobileUseEffect, changeHoveredItemUseEffect} from "../assets/js/verticalMenuFunctions.js";
+import {menuItems, menuButtons, hangingStringUseEffect} from "../assets/js/hanging_String.jsx";
 import returnIcon from "../assets/js/headerIcons.js";
 import {useLocation} from "react-router-dom";
 
@@ -7,31 +8,12 @@ export default function VerticalHangingMenu() {
 
     const location = useLocation();
     const {imgSrc, imgAlt, imgWidth = "60px", imgHeight = "60px"} = returnIcon(location.pathname);
+    const {canvasRef, containerRef, menuItemsRef, requestRef, hoveredItemRef, endIconRef, hoveredItem, setHoveredItem} = verticalMenuUseRefs();
 
-    const canvasRef = useRef(null);
-    const containerRef = useRef(null);
-    const menuItemsRef = useRef([]);
-    const requestRef = useRef(null);
-    const hoveredItemRef = useRef(null);
-    const endIconRef = useRef(null);
-    const [hoveredItem, setHoveredItem] = useState(null);
+    changeWithForMobileUseEffect(containerRef);
+    changeHoveredItemUseEffect(hoveredItem, hoveredItemRef);
+    hangingStringUseEffect(canvasRef, containerRef, requestRef, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
 
-    useEffect(() => {
-        if(window.innerWidth < 700){
-            containerRef.current.classList.remove('h-[25vh]');
-            containerRef.current.classList.add('h-[35vh]');
-        }
-    },[]);
-
-    useEffect(() => { hoveredItemRef.current = hoveredItem }, [ hoveredItem ]);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const container = containerRef.current;
-        if (!canvas || !container) return;
-        const cleanup = hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
-        return () => cleanup();
-    }, []);
 
     return (
         <div

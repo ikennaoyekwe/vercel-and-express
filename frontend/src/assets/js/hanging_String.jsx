@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 
 export const menuItems = [
@@ -38,6 +38,16 @@ export function menuButtons(hoveredItem, menuItemsRef, setHoveredItem) {
             )
         )
     )
+}
+
+export function hangingStringUseEffect(canvasRef, containerRef, requestRef, hoveredItemRef, menuItemsRef, menuItems, endIconRef) {
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const container = containerRef.current;
+        if (!canvas || !container) return;
+        const cleanup = hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
+        return () => cleanup();
+    }, []);
 }
 
 
