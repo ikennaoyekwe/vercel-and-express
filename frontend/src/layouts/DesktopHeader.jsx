@@ -16,6 +16,13 @@ export default function VerticalHangingMenu() {
     const endIconRef = useRef(null);
     const [hoveredItem, setHoveredItem] = useState(null);
 
+    useEffect(() => {
+        if(window.innerWidth < 700){
+            containerRef.current.classList.remove('h-[25vh]');
+            containerRef.current.classList.add('h-[35vh]');
+        }
+    },[]);
+
     useEffect(() => { hoveredItemRef.current = hoveredItem }, [ hoveredItem ]);
 
     useEffect(() => {
@@ -25,13 +32,6 @@ export default function VerticalHangingMenu() {
         const cleanup = hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
         return () => cleanup();
     }, []);
-
-    useEffect(() => {
-       if(window.innerWidth < 700){
-           containerRef.current.classList.remove('h-[25vh]');
-           containerRef.current.classList.add('h-[35vh]');
-       }
-    },[]);
 
     return (
         <div
