@@ -11,11 +11,11 @@ router.get('/checkRoute', (req, res)=>{
     })
 });
 
-router.get('/getIp', (req, res)=>{
-    const forwarded = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+router.get('/getIp', async (req, res)=>{
+    const forwarded = await req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     let ip;
     if (typeof forwarded === "string") {
-        const ip = forwarded ? forwarded.split(",")[0] : req.socket.remoteAddress;
+        const ip = await (forwarded ? forwarded.split(",")[0] : req.socket.remoteAddress);
     }else{
         ip = forwarded;
     }
