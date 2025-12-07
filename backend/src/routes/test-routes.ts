@@ -27,5 +27,11 @@ router.get("/getIp", (req, res) => {
     });
 });
 
+router.get("/newRoute", (req, res) => {
+    res.json({
+        message: "this is a new route",
+    });
+}); 
+
 
 export default router;
