@@ -1,5 +1,21 @@
-import {useCallback, useEffect} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {isMobile} from "react-device-detect";
+
+export function returnHooksVariables(){
+    const [userIp, setUserIp] = useState('Loading Ip...');
+    const firstPosition = useRef(0);
+    const [svgOpacity, setSvgOpacity] = useState(1);
+    const canvasRef = useRef(null);
+
+    return {
+        userIp: userIp,
+        setUserIp: setUserIp,
+        firstPosition: firstPosition,
+        svgOpacity: svgOpacity,
+        setSvgOpacity: setSvgOpacity,
+        canvasRef: canvasRef
+    }
+}
 
 export default function mobileAdjustCallBack(){
     return useCallback((node) => {
