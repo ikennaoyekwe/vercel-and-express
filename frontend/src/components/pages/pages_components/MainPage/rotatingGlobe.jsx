@@ -52,7 +52,7 @@ const fetchAndPulse = async (globe) => {
     const apiKey = 'bdd70bad62f4811930aea093439bd459';
 
     try {
-        const response = await fetch(`http://api.ipstack.com/check?access_key=${apiKey}`);
+        const response = await fetch(`https://ipapi.co/json/`);
         const data = await response.json();
 
         console.log(data);
