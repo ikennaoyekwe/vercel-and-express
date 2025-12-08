@@ -17,15 +17,19 @@ export function returnHooksVariables(){
     }
 }
 
-export default function mobileAdjustCallBack(){
-    return useCallback((node) => {
-        if(!node) return;
-        if(node.id === 'lyrics'){
-            isMobile ? node.classList.add('max-w-[70vw]') : node.classList.add('max-w-[48vw]');
+export function fetchIpUseEffect(userIp, setUserIp) {
+    return useEffect(() => {
+        const fetchIp = async () => {
+            try{
+                const response = await fetch("/api/tests/getIp");
+                const json = await response.json();
+                setUserIp(json.message + " - " + json.ip);
+            }catch (error) {
+                console.log(error);
+            }
         }
-        if(node.id === 'svgImage')
-            isMobile ? node.classList.add('mt-44') : node.classList.remove('mt-44');
-    },[]);
+        fetchIp().then(r => console.log(r));
+    }, []);
 }
 
 export function scrollUseEffect(svgOpacity, setSvgOpacity, firstPosition){
@@ -43,4 +47,16 @@ export function scrollUseEffect(svgOpacity, setSvgOpacity, firstPosition){
 
         return () => window.removeEventListener("scroll", scroll);
     }, []);
+}
+
+
+export function mobileAdjustCallBack(){
+    return useCallback((node) => {
+        if(!node) return;
+        if(node.id === 'lyrics'){
+            isMobile ? node.classList.add('max-w-[70vw]') : node.classList.add('max-w-[48vw]');
+        }
+        if(node.id === 'svgImage')
+            isMobile ? node.classList.add('mt-44') : node.classList.remove('mt-44');
+    },[]);
 }
