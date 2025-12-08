@@ -6,6 +6,7 @@ import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
 import NameTag from "./pages_components/MainPage/nameTag.jsx";
+import RotatingGlobe from "./pages_components/MainPage/rotatingGlobe.jsx";
 
 export default function MainPage() {
 
@@ -23,7 +24,7 @@ export default function MainPage() {
                 <Lyrics svgOpacity={svgOpacity}/>
             </div>
             <div id="lyrics" className="max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
-                <Lyrics svgOpacity={svgOpacity}/>
+                <RotatingGlobe/>
             </div>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
                 <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 mt-44">

@@ -1,89 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import '../../../../assets/css/globe.css';
-
-// Define the custom plugins outside the component to keep the code clean
-function autorotate(degPerSec) {
-    return function (planet) {
-        let lastTick = null;
-        let paused = false;
-        planet.plugins.autorotate = {
-            pause: function () { paused = true; },
-            resume: function () { paused = false; }
-        };
-        planet.onDraw(function () {
-            if (paused || !lastTick) {
-                lastTick = new Date();
-            } else {
-                var now = new Date();
-                var delta = now - lastTick;
-                var rotation = planet.projection.rotate();
-                rotation[0] += degPerSec * delta / 1000;
-                if (rotation[0] >= 180) rotation[0] -= 360;
-                planet.projection.rotate(rotation);
-                lastTick = now;
-            }
-        });
-    };
-}
-
-function lakes(options) {
-    options = options || {};
-    let lakes = null;
-
-    return function (planet) {
-        planet.onInit(function () {
-            // We assume topojson is available globally
-            var world = planet.plugins.topojson.world;
-            lakes = window.topojson.feature(world, world.objects.ne_110m_lakes);
-        });
-
-        planet.onDraw(function () {
-            planet.withSavedContext(function (context) {
-                context.beginPath();
-                planet.path.context(context)(lakes);
-                context.fillStyle = options.fill || 'black';
-                context.fill();
-            });
-        });
-    };
-}
-
-const fetchAndPulse = async (globe, data) => {
-    const apiKey = 'bdd70bad62f4811930aea093439bd459';
-    console.log(data);
-
-    try {
-        if (data.latitude && data.longitude) {
-
-            const pulseLocation = () => {
-                globe.plugins.pings.add(data.longitude, data.latitude, {
-                    color: 'white',
-                    ttl: 1000,
-                    angle: 10
-                });
-            };
-
-            pulseLocation();
-
-            const pingInterval = setInterval(pulseLocation, 2000);
-            return pingInterval;
-        }
-    } catch (err) {
-        console.error("API Error", err);
-    }
-};
 
 const RotatingGlobe = () => {
     const canvasRef = useRef(null);
+    const [city, setCity] = useState("");
 
     useEffect(() => {
 
         const getIpLocation = async () => {
-            let data = {message: "error has happened in fetching location", latitude: 51, longitude: 41};
+            let data = {message: "error has happened in fetching location", latitude: 0, longitude: 0};
             try {
                 const response = await fetch(`https://ipapi.co/json/`);
                 data = await response.json();
                 console.log(data);
+                if(data)
+                    setCity(data.country_name);
             } catch (err) {
                 console.error("API Error", err);
             }
@@ -159,18 +90,89 @@ const RotatingGlobe = () => {
     }, []); // Empty array ensures this runs once on mount
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div>
             <canvas
                 ref={canvasRef}
                 width='990'
                 height='990'
-                style={{ width: "990px", height: "990px", cursor: "move" }}
+                style={{ width: "150%", cursor: "move", margin: "-13em" }}
             />
-            <h1>
-                <span>Our</span><br />Headquarters
-            </h1>
+            {/*<h1>*/}
+            {/*    <span>Our</span><br />Headquarters / {city}*/}
+            {/*</h1>*/}
         </div>
     );
 };
+const fetchAndPulse = async (globe, data) => {
+    const apiKey = 'bdd70bad62f4811930aea093439bd459';
+    console.log(data);
+
+    try {
+        if (data.latitude && data.longitude) {
+
+            const pulseLocation = () => {
+                globe.plugins.pings.add(data.longitude, data.latitude, {
+                    color: 'white',
+                    ttl: 1000,
+                    angle: 10
+                });
+            };
+
+            pulseLocation();
+
+            const pingInterval = setInterval(pulseLocation, 2000);
+            return pingInterval;
+        }
+    } catch (err) {
+        console.error("API Error", err);
+    }
+};
+
+// Define the custom plugins outside the component to keep the code clean
+function autorotate(degPerSec) {
+    return function (planet) {
+        let lastTick = null;
+        let paused = false;
+        planet.plugins.autorotate = {
+            pause: function () { paused = true; },
+            resume: function () { paused = false; }
+        };
+        planet.onDraw(function () {
+            if (paused || !lastTick) {
+                lastTick = new Date();
+            } else {
+                var now = new Date();
+                var delta = now - lastTick;
+                var rotation = planet.projection.rotate();
+                rotation[0] += degPerSec * delta / 1000;
+                if (rotation[0] >= 180) rotation[0] -= 360;
+                planet.projection.rotate(rotation);
+                lastTick = now;
+            }
+        });
+    };
+}
+
+function lakes(options) {
+    options = options || {};
+    let lakes = null;
+
+    return function (planet) {
+        planet.onInit(function () {
+            // We assume topojson is available globally
+            var world = planet.plugins.topojson.world;
+            lakes = window.topojson.feature(world, world.objects.ne_110m_lakes);
+        });
+
+        planet.onDraw(function () {
+            planet.withSavedContext(function (context) {
+                context.beginPath();
+                planet.path.context(context)(lakes);
+                context.fillStyle = options.fill || 'black';
+                context.fill();
+            });
+        });
+    };
+}
 
 export default RotatingGlobe;
