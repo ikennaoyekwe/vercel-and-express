@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import '../../../../assets/css/globe.css';
 
-// Define the custom plugins outside the component to keep it clean
-// (or inside useEffect if you prefer, but outside is more efficient)
+// Define the custom plugins outside the component to keep the code clean
 function autorotate(degPerSec) {
     return function (planet) {
         let lastTick = null;
@@ -49,6 +48,36 @@ function lakes(options) {
     };
 }
 
+const fetchAndPulse = async (globe) => {
+    const apiKey = 'bdd70bad62f4811930aea093439bd459';
+
+    try {
+        const response = await fetch(`http://api.ipstack.com/check?access_key=${apiKey}`);
+        const data = await response.json();
+
+        console.log(data);
+
+        if (data.latitude && data.longitude) {
+
+            const pulseLocation = () => {
+                globe.plugins.pings.add(data.longitude, data.latitude, {
+                    color: 'white',
+                    ttl: 1000,
+                    angle: 10
+                });
+            };
+
+            pulseLocation();
+
+            const pingInterval = setInterval(pulseLocation, 2000);
+
+            return pingInterval;
+        }
+    } catch (err) {
+        console.error("API Error", err);
+    }
+};
+
 const RotatingGlobe = () => {
     const canvasRef = useRef(null);
 
@@ -67,13 +96,13 @@ const RotatingGlobe = () => {
 
         globe.loadPlugin(window.planetaryjs.plugins.earth({
             topojson: { file: 'https://raw.githubusercontent.com/MadeByDroids/madebydroids.github.io/master/world-110m-withlakes%20(1).json' },
-            oceans: { fill: '#fecb00' },
-            land: { fill: '#222221' },
-            borders: { stroke: '#333333' }
+            oceans: { fill: 'white' },
+            land: { fill: 'black' },
+            borders: { stroke: '#000000' }
         }));
 
         globe.loadPlugin(lakes({
-            fill: '#fecb00'
+            fill: '#000000'
         }));
 
         globe.loadPlugin(window.planetaryjs.plugins.pings());
@@ -105,20 +134,12 @@ const RotatingGlobe = () => {
         // 5. Draw
         globe.draw(canvas);
 
-        // 6. Setup Pings Interval
-        const colors = ['white'];
-        const interval = setInterval(function () {
-            const lat = Math.random() * 170 - 85;
-            const lng = Math.random() * 360 - 180;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            globe.plugins.pings.add(8, 47, { color: color, ttl: 1000, angle: Math.random() * 3 });
-        }, 150);
+        let pingInterval = null;
+        const fetchAndPulseInterval = fetchAndPulse(globe);
+        fetchAndPulseInterval.then(r => pingInterval = r);
 
-        // 7. Cleanup on Unmount
         return () => {
-            clearInterval(interval);
-            // Planetary.js doesn't have an explicit 'destroy', but stopping the interval is crucial.
-            // If the library supports stopping the loop, add it here.
+            clearInterval(pingInterval);
         };
 
     }, []); // Empty array ensures this runs once on mount
@@ -131,7 +152,7 @@ const RotatingGlobe = () => {
                 height='990'
                 style={{ width: "990px", height: "990px", cursor: "move" }}
             />
-            <h1 style={{ position: 'absolute', top: '20px', left: '20px', pointerEvents: 'none' }}>
+            <h1>
                 <span>Our</span><br />Headquarters
             </h1>
         </div>

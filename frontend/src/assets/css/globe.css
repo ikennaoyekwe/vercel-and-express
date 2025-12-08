@@ -5,14 +5,7 @@ body {margin:0 0 0 0; padding:0 0 0 0;}
     display:block;
     z-index:10000;
     position:absolute;
-    background: rgba(254,203,0,0.77);
-    background: -moz-linear-gradient(left, rgba(254,203,0,0.77) 0%, rgba(254,203,0,1) 100%);
-    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(254,203,0,0.77)), color-stop(100%, rgba(254,203,0,1)));
-    background: -webkit-linear-gradient(left, rgba(254,203,0,0.77) 0%, rgba(254,203,0,1) 100%);
-    background: -o-linear-gradient(left, rgba(254,203,0,0.77) 0%, rgba(254,203,0,1) 100%);
-    background: -ms-linear-gradient(left, rgba(254,203,0,0.77) 0%, rgba(254,203,0,1) 100%);
-    background: linear-gradient(to right, rgba(254,203,0,0.77) 0%, rgba(254,203,0,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fecb00', endColorstr='#fecb00', GradientType=1 );
+
 }
 #rotatingGlobe {
     width: 990px;

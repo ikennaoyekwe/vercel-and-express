@@ -1,4 +1,5 @@
 import React from "react";
+import Globe from "./pages_components/MainPage/rotatingGlobe.jsx";
 import RotatingGlobe from "./pages_components/MainPage/rotatingGlobe.jsx";
 
 export default function PlayGround() {
