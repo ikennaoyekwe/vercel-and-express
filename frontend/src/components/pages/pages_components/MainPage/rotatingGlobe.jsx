@@ -48,15 +48,11 @@ function lakes(options) {
     };
 }
 
-const fetchAndPulse = async (globe) => {
+const fetchAndPulse = async (globe, data) => {
     const apiKey = 'bdd70bad62f4811930aea093439bd459';
+    console.log(data);
 
     try {
-        const response = await fetch(`https://ipapi.co/json/`);
-        const data = await response.json();
-
-        console.log(data);
-
         if (data.latitude && data.longitude) {
 
             const pulseLocation = () => {
@@ -70,7 +66,6 @@ const fetchAndPulse = async (globe) => {
             pulseLocation();
 
             const pingInterval = setInterval(pulseLocation, 2000);
-
             return pingInterval;
         }
     } catch (err) {
@@ -82,6 +77,19 @@ const RotatingGlobe = () => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
+
+        const getIpLocation = async () => {
+            let data = {message: "error has happened in fetching location", latitude: 51, longitude: 41};
+            try {
+                const response = await fetch(`https://ipapi.co/json/`);
+                data = await response.json();
+                console.log(data);
+            } catch (err) {
+                console.error("API Error", err);
+            }
+            return data
+        }
+
         // 1. Check if libraries are loaded
         if (!window.planetaryjs || !window.d3 || !window.topojson) {
             console.error("PlanetaryJS, D3, or TopoJSON not loaded.");
@@ -135,11 +143,17 @@ const RotatingGlobe = () => {
         globe.draw(canvas);
 
         let pingInterval = null;
-        const fetchAndPulseInterval = fetchAndPulse(globe);
-        fetchAndPulseInterval.then(r => pingInterval = r);
+
+        const init_getIpLocation = async () => {
+            const locationData = await getIpLocation();
+            pingInterval = fetchAndPulse(globe, locationData);
+        }
+
+        init_getIpLocation();
 
         return () => {
-            clearInterval(pingInterval);
+            if(pingInterval)
+                clearInterval(pingInterval);
         };
 
     }, []); // Empty array ensures this runs once on mount
