@@ -60,7 +60,7 @@ export function planetaryJsGlobe(){
     }
 
     const globe = window.planetaryjs.planet();
-    // globe.loadPlugin(autorotate(5));
+    globe.loadPlugin(autorotate(5));
 
     globe.loadPlugin(window.planetaryjs.plugins.earth({
         topojson: { file: 'https://raw.githubusercontent.com/MadeByDroids/madebydroids.github.io/master/world-110m-withlakes%20(1).json' },

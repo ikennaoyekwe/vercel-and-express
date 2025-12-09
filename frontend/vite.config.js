@@ -9,9 +9,12 @@ export default defineConfig({
   },
   build: {
 	  minify: "esbuild",
+	  esbuild: {
+		  jsxDev: false,
+	  },
 	  rollupOptions:{
 		  treeshake: true
-	  }
+	  },
     outDir: 'build', // Change the output directory to 'build'
   },
   test: {

@@ -42,7 +42,7 @@ export default function MainPage() {
                 <div className="h-[800px]">Hello PUll Up Content</div>
             </div>
             <MovingWave/>
-            <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none"/>
+            <canvas id="particles-canvas" ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none"/>
         </div>
     );
 }

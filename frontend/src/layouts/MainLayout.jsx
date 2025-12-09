@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import MobileHeader from "./MobileHeader.jsx";
-import { isMobile} from "react-device-detect";
 import Footer from "./Footer.jsx";
 import { Outlet } from "react-router-dom";
 import DesktopHeader from "./DesktopHeader.jsx";

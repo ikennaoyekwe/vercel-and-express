@@ -24,6 +24,7 @@ const RotatingGlobe = () => {
         <div>
             <canvas
                 ref={canvasRef}
+                id="globe-canvas"
                 width='990'
                 height='990'
                 style={{ width: "150%", cursor: "move", margin: "-13em" }}

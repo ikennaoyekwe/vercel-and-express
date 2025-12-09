@@ -18,7 +18,7 @@ export default function MovingWave() {
     return (
         <>
             <canvas
-                id="background"
+                id="wave-canvas"
                 ref={canvasRef}
                 className="fixed bottom-0 w-full h-full z-10"
                 style={{ width: "100%", height: "100%"}}
