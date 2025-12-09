@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { init } from "../../../../assets/js/movingWaves.js";
+import { init } from "../../../../assets/js/mainPage/movingWaves.js";
 
 export default function MovingWave() {
     const canvasRef = useRef(null);

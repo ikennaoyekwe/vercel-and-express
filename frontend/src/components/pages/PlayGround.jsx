@@ -1,9 +1,9 @@
 import React from "react";
-import RotatingGlobe from "./pages_components/MainPage/rotatingGlobe.jsx";
+import MyForm from "../testComponent/myForm.jsx";
 
 export default function PlayGround() {
 
     return (
-        <RotatingGlobe/>
+        <MyForm/>
     )
 }

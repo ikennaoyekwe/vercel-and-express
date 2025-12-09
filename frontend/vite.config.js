@@ -8,6 +8,10 @@ export default defineConfig({
     postcss: './postcss.config.js',
   },
   build: {
+	  minify: "esbuild",
+	  rollupOptions:{
+		  treeshake: true
+	  }
     outDir: 'build', // Change the output directory to 'build'
   },
   test: {

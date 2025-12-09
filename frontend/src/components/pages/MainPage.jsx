@@ -1,6 +1,6 @@
 import React from 'react';
-import initialParticlesUseEffect from "../../assets/js/Particles.js";
-import {scrollUseEffect, returnHooksVariables, fetchIpUseEffect} from "../../assets/js/mainPageScripts.js";
+import initialParticlesUseEffect from "../../assets/js/mainPage/Particles.js";
+import {scrollUseEffect, returnHooksVariables, fetchIpUseEffect} from "../../assets/js/mainPage/mainPageScripts.js";
 import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
 import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";

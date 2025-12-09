@@ -1,7 +1,7 @@
 import React from "react";
-import verticalMenuUseRefs, {changeWithForMobileUseEffect, changeHoveredItemUseEffect} from "../assets/js/verticalMenuFunctions.js";
-import {menuItems, menuButtons, hangingStringUseEffect} from "../assets/js/hanging_String.jsx";
-import returnIcon from "../assets/js/headerIcons.js";
+import verticalMenuUseRefs, {changeWithForMobileUseEffect, changeHoveredItemUseEffect} from "../assets/js/header/verticalMenuFunctions.js";
+import {menuItems, menuButtons, hangingStringUseEffect} from "../assets/js/header/hanging_String.jsx";
+import returnIcon from "../assets/js/header/headerIcons.js";
 import {useLocation} from "react-router-dom";
 
 export default function VerticalHangingMenu() {
