@@ -5,6 +5,7 @@ export function returnHooksVariables(){
     const [userIp, setUserIp] = useState('Loading Ip...');
     const firstPosition = useRef(0);
     const [svgOpacity, setSvgOpacity] = useState(1);
+    const [globeSize, setGlobeSize] = useState(isMobile ? 500 : 1000);
     const canvasRef = useRef(null);
 
     return {
@@ -13,7 +14,9 @@ export function returnHooksVariables(){
         firstPosition: firstPosition,
         svgOpacity: svgOpacity,
         setSvgOpacity: setSvgOpacity,
-        canvasRef: canvasRef
+        canvasRef: canvasRef,
+        globeSize: globeSize,
+        setGlobeSize: setGlobeSize
     }
 }
 
@@ -32,15 +35,23 @@ export function fetchIpUseEffect(userIp, setUserIp) {
     }, []);
 }
 
-export function scrollUseEffect(svgOpacity, setSvgOpacity, firstPosition){
+export function scrollUseEffect(setSvgOpacity, setGlobeSize, firstPosition){
     return useEffect(() => {
         const scroll = () => {
             const prevY = firstPosition.current;
 
-            if (window.scrollY > prevY) setSvgOpacity(prevState => prevState - 0.035);
-            if(window.scrollY < prevY) setSvgOpacity(prevState => prevState + 0.035);
-            if(window.scrollY === 0) setSvgOpacity(1);
-
+            if (window.scrollY > prevY) {
+                setSvgOpacity(prevState => prevState - 0.035);
+                setGlobeSize(prevState => prevState - 100);
+            }
+            if(window.scrollY < prevY) {
+                setSvgOpacity(prevState => prevState + 0.035);
+                setGlobeSize(prevState => prevState + 100);
+            }
+            if(window.scrollY === 0) {
+                setSvgOpacity(1);
+                setGlobeSize(isMobile ? 500 : 1000);
+            }
             firstPosition.current = window.scrollY;
         }
         window.addEventListener("scroll", scroll, {passive: true});
