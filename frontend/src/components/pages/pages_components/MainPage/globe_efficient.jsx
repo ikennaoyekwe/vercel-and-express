@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
-import {getIpLocation} from "../../../../assets/js/mainPage/globe.js";
+import {getIpLocation} from "../../../../assets/js/mainPage/globeData.js";
 
 const Globe_efficient = ({ width = 700, height = 700}) => {
     const canvasRef = useRef(null);
