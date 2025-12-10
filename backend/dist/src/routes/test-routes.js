@@ -24,6 +24,9 @@ router.get("/getIp", (req, res) => {
     }
     res.json({
         message: "This is the Route for getting IP address",
+        latitude: 10,
+        longitude: 10,
+        country_name: "Nigeria",
         ip: ip,
     });
 });
