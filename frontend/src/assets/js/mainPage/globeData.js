@@ -14,8 +14,8 @@ export async function getIpLocation(setData) {
     try {
         // if(localStorage.getItem("PC_ID") === "771a4fc0-c417-4800-a64d-d0558abf0993") return;
         // const response = await fetch(`https://ipapi.co/json/`);
-        const response = await fetch('/api/tests/getIp');
-        data = await response.json();
+        // const response = await fetch('/api/tests/getIp');
+        // data = await response.json();
         console.log(data);
         setData(data);
     } catch (err) {
