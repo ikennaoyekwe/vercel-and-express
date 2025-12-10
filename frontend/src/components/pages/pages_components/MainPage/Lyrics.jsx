@@ -1,7 +1,7 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "../../../../assets/css/lyrics.scss";
 
-export default function Lyrics({svgOpacity}) {
+export default function Lyrics({svgOpacity, words = {ip:"255.105.32.102", country: "Germany"}}) {
 
     const messageRef = useRef(null);
 
@@ -15,7 +15,7 @@ export default function Lyrics({svgOpacity}) {
                     .map((c) => `<i>${c}</i>`)
                     .join("");
 
-                return `<span>${chars}</span>`;
+                return `<span>${chars}</span><br/>`;
             })
             .join(" ");
 
@@ -29,9 +29,7 @@ export default function Lyrics({svgOpacity}) {
 
         el.classList.remove("animate");
 
-        // Using requestAnimationFrame ensures the browser registers the removal
         requestAnimationFrame(() => {
-            // force reflow (el.offsetHeight)
             void el.offsetHeight;
 
             requestAnimationFrame(() => {
@@ -58,13 +56,15 @@ export default function Lyrics({svgOpacity}) {
             replayAnimation();
         }, 4000);
 
-        return () => clearInterval(interval); // cleanup on unmount
-    }, []); // empty deps = run once
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className="component" style={{opacity: svgOpacity}}>
             <p ref={messageRef} className="typewriter js-typewriter">
-                Coding is to programming what typing is to writing.
+                {/* Put Space Is Required For Parsing \n New Line and Words */}
+                {`${words.ip} `}
+                {`${words.country} Welcome`}
             </p>
         </div>
     );
@@ -72,8 +72,6 @@ export default function Lyrics({svgOpacity}) {
 
 
 function myFunction() {
-
-
     let log = console.log.bind(console),
         messageElement = document.querySelector('.js-typewriter'),
         text = messageElement.innerText.trim();
