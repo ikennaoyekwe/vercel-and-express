@@ -49,7 +49,7 @@ export default function MainPage() {
             <div className="flex justify-center">
                 <div className="h-[800px]">Hello PUll Up Content</div>
             </div>
-            <MovingWave/>
+            <MovingWave scrollState={100 - (svgOpacity * 100)}/>
             <canvas id="particles-canvas" ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none"/>
         </div>
     );

@@ -1,26 +1,20 @@
 import * as THREE from 'three';
 import SimplexNoise from "simplex-noise";
-// import chroma from 'chroma-js'; // Uncomment if you use chroma
 
 export function init(canvasElement) {
-    // 1. ALL variables must be defined INSIDE this function scope
-    // This prevents them from persisting when React unmounts the component
     let renderer, scene, camera;
     let width, height, wWidth, wHeight;
     let plane;
-    let animationId; // To store the loop ID
+    let animationId;
 
-    // Configuration
     const conf = {
-        fov: 75,
+        fov: 70,
         cameraZ: 75,
         xyCoef: 50,
         zCoef: 10,
         lightIntensity: 0.9,
-        light1Color: 0x0E09DC,
-        light2Color: 0x1CD1E1,
-        light3Color: 0x18C02C,
-        light4Color: 0xee3bcf
+        // Base colors
+        baseColors: [0x0E09DC, 0x1CD1E1, 0x18C02C, 0xee3bcf],
     };
 
     const simplex = new SimplexNoise();
@@ -31,16 +25,20 @@ export function init(canvasElement) {
 
     // Lights
     const lightDistance = 500;
-    const light1 = new THREE.PointLight(conf.light1Color, conf.lightIntensity, lightDistance);
-    const light2 = new THREE.PointLight(conf.light2Color, conf.lightIntensity, lightDistance);
-    const light3 = new THREE.PointLight(conf.light3Color, conf.lightIntensity, lightDistance);
-    const light4 = new THREE.PointLight(conf.light4Color, conf.lightIntensity, lightDistance);
+    const light1 = new THREE.PointLight(conf.baseColors[0], conf.lightIntensity, lightDistance);
+    const light2 = new THREE.PointLight(conf.baseColors[1], conf.lightIntensity, lightDistance);
+    const light3 = new THREE.PointLight(conf.baseColors[2], conf.lightIntensity, lightDistance);
+    const light4 = new THREE.PointLight(conf.baseColors[3], conf.lightIntensity, lightDistance);
 
-    // --- Helper Functions defined inside to access local variables ---
+    // --- Helpers ---
+
+    const mapRange = (value, inMin, inMax, outMin, outMax) => {
+        return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    };
 
     const updateSize = () => {
-        width = canvasElement.clientWidth;
-        height = canvasElement.clientHeight;
+        width = canvasElement.clientWidth || window.innerWidth;
+        height = canvasElement.clientHeight || window.innerHeight;
 
         if (renderer && camera) {
             renderer.setSize(width, height);
@@ -74,7 +72,7 @@ export function init(canvasElement) {
     const initScene = () => {
         scene = new THREE.Scene();
 
-        // Lights
+        // Position Lights
         const r = 30;
         const y = 10;
         light1.position.set(0, y, r);
@@ -88,7 +86,14 @@ export function init(canvasElement) {
 
         // Plane
         const mat = new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-        const geo = new THREE.PlaneBufferGeometry(wWidth, wHeight, wWidth / 2, wHeight / 2);
+
+        // FIX: Ensure segment counts are Integers and use PlaneBufferGeometry
+        const segmentsX = Math.floor(wWidth / 2) || 1;
+        const segmentsY = Math.floor(wHeight / 2) || 1;
+
+        // Use PlaneBufferGeometry explicitly to ensure attributes.position exists
+        const geo = new THREE.PlaneBufferGeometry(wWidth, wHeight, segmentsX, segmentsY);
+
         plane = new THREE.Mesh(geo, mat);
         scene.add(plane);
 
@@ -98,9 +103,12 @@ export function init(canvasElement) {
     };
 
     const animatePlane = () => {
-        if(!plane) return;
+        // FIX: Robust check for geometry attributes to prevent "undefined" error
+        if (!plane || !plane.geometry || !plane.geometry.attributes || !plane.geometry.attributes.position) return;
+
         const gArray = plane.geometry.attributes.position.array;
         const time = Date.now() * 0.0002;
+
         for (let i = 0; i < gArray.length; i += 3) {
             gArray[i + 2] = simplex.noise4D(gArray[i] / conf.xyCoef, gArray[i + 1] / conf.xyCoef, time, mouse.x + mouse.y) * conf.zCoef;
         }
@@ -121,57 +129,68 @@ export function init(canvasElement) {
     };
 
     const animate = () => {
-        // This is the recursive loop
         animationId = requestAnimationFrame(animate);
-
         animatePlane();
         animateLights();
-        renderer.render(scene, camera);
+        if (renderer && scene && camera) {
+            renderer.render(scene, camera);
+        }
     };
 
-    // --- Initialization Logic ---
-
+    // --- Initialization ---
     renderer = new THREE.WebGLRenderer({ canvas: canvasElement, antialias: true, alpha: true });
     camera = new THREE.PerspectiveCamera(conf.fov);
     camera.position.z = conf.cameraZ;
 
-    updateSize(); // Initial size calculation
-
-    // Add Listeners
+    updateSize(); // Calculate width/height first
     window.addEventListener('resize', updateSize);
     canvasElement.addEventListener('mousemove', onMouseMove);
 
-    initScene();
-    animate(); // Start Loop
+    initScene(); // Create plane using calculated sizes
+    animate();   // Start loop
 
-    // --- RETURN CLEANUP FUNCTION ---
-    // This function will be called by React when the component unmounts
-    return () => {
-        // 1. Stop the loop
-        cancelAnimationFrame(animationId);
+    // --- EXTERNAL UPDATE FUNCTION ---
+    const updateWaveParams = (scrollPercentage) => {
+        const val = Math.max(0, Math.min(100, scrollPercentage));
 
-        // 2. Remove Event Listeners
-        window.removeEventListener('resize', updateSize);
-        canvasElement.removeEventListener('mousemove', onMouseMove);
+        // 1. Modify Wave Shape
+        // xyCoef: 50 (smooth) -> 15 (rippled)
+        conf.xyCoef = mapRange(val, 0, 100, 50, 15);
+        // zCoef: 10 (low) -> 25 (high)
+        conf.zCoef = mapRange(val, 0, 100, 10, 25);
 
-        // 3. Dispose Geometries and Materials (Important for GPU memory)
-        scene.traverse((object) => {
-            if (!object.isMesh) return;
+        // 2. Modify Colors (Hue Shift)
+        const hueShift = val / 100;
+        const lights = [light1, light2, light3, light4];
 
-            if (object.geometry) {
-                object.geometry.dispose();
-            }
-
-            if (object.material) {
-                if (Array.isArray(object.material)) {
-                    object.material.forEach((material) => material.dispose());
-                } else {
-                    object.material.dispose();
-                }
-            }
+        lights.forEach((light, index) => {
+            if(!light) return;
+            const baseColor = new THREE.Color(conf.baseColors[index]);
+            const hsl = {};
+            baseColor.getHSL(hsl);
+            light.color.setHSL((hsl.h + hueShift) % 1, hsl.s, hsl.l);
         });
+    };
 
-        // 4. Dispose Renderer
-        renderer.dispose();
+    // --- CLEANUP ---
+    return {
+        cleanup: () => {
+            cancelAnimationFrame(animationId);
+            window.removeEventListener('resize', updateSize);
+            canvasElement.removeEventListener('mousemove', onMouseMove);
+
+            if (scene) {
+                scene.traverse((object) => {
+                    if (!object.isMesh) return;
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        if (Array.isArray(object.material)) object.material.forEach((m) => m.dispose());
+                        else object.material.dispose();
+                    }
+                });
+            }
+            if (renderer) renderer.dispose();
+        },
+        update: updateWaveParams
     };
 }
