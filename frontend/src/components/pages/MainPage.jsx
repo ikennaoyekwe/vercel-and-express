@@ -1,4 +1,5 @@
 import React from 'react';
+import {usePerformanceMonitor} from "../../assets/js/hooks/usePerformanceMonitor.js";
 import initialParticlesUseEffect from "../../assets/js/mainPage/Particles.js";
 import {scrollUseEffect, returnHooksVariables, fetchIpUseEffect} from "../../assets/js/mainPage/mainPageScripts.js";
 import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
@@ -11,10 +12,11 @@ import {isMobile} from "react-device-detect";
 
 export default function MainPage() {
 
+    const isLowPower = usePerformanceMonitor();
+    console.log(isLowPower + " | " + window.navigator.hardwareConcurrency + " | " + window.navigator.deviceMemory);
     const {userIp, setUserIp, firstPosition, svgOpacity, setSvgOpacity, canvasRef} = returnHooksVariables();
 
     initialParticlesUseEffect(canvasRef);
-
     fetchIpUseEffect(userIp, setUserIp);
     scrollUseEffect(setSvgOpacity, firstPosition);
 
@@ -26,11 +28,11 @@ export default function MainPage() {
             </div>
             {isMobile ? (
                 <div id="globe" className="fixed top-1/3 left-0 -translate-x-1/2 -translate-y-1/2">
-                    <Globe_efficient width="500" height="500"/>
+                    {/*<Globe_efficient width="500" height="500"/>*/}
                 </div>
             ) : (
                 <div id="globe" className="fixed top-[36%] left-0 -translate-x-1/2 -translate-y-1/2">
-                    <Globe_efficient width="1000" height="1000"/>
+                    {/*<Globe_efficient width="1000" height="1000"/>*/}
                 </div>
             )}
 

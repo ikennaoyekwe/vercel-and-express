@@ -155,9 +155,9 @@ export function init(canvasElement) {
 
         // 1. Modify Wave Shape
         // xyCoef: 50 (smooth) -> 15 (rippled)
-        conf.xyCoef = mapRange(val, 0, 100, 50, 15);
+        conf.xyCoef = mapRange(val, 0, 100, 50, 25);
         // zCoef: 10 (low) -> 25 (high)
-        conf.zCoef = mapRange(val, 0, 100, 10, 25);
+        conf.zCoef = mapRange(val, 0, 100, 10, 10);
 
         // 2. Modify Colors (Hue Shift)
         const hueShift = val / 100;
