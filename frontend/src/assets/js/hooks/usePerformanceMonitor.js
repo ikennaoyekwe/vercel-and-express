@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 
 export function usePerformanceMonitor() {
+    const MAX_LOOP = 3;
     const [isLowPower, setIsLowPower] = useState(false);
+    const [maxRun, setMaxRun] = useState(0);
 
     useEffect(() => {
         let frameId;
@@ -16,24 +18,22 @@ export function usePerformanceMonitor() {
             frameCount++;
             const elapsed = time - startTime;
 
-            // Every 500ms, calculate the FPS for that chunk
             if (elapsed >= 500) {
                 const fps = (frameCount / elapsed) * 1000;
                 measurements.push(fps);
-                // Reset for next chunk
                 startTime = time;
                 frameCount = 0;
-                // Stop monitoring after duration is reached
                 const totalTime = performance.now() - initTime;
                 if (totalTime > MONITOR_DURATION) {
-                    // Calculate average FPS of all chunks
                     const avgFps = measurements.reduce((a, b) => a + b, 0) / measurements.length;
-
                     console.log("Average FPS detected:", Math.round(avgFps));
-
                     if (avgFps < FPS_THRESHOLD) {
                         setIsLowPower(true);
                     }
+                    // my added loop
+                    if(maxRun < MAX_LOOP)
+                        setMaxRun(prevState => prevState + 1);
+                    // end loop
                     return; // Stop the loop
                 }
             }
@@ -44,7 +44,7 @@ export function usePerformanceMonitor() {
         frameId = requestAnimationFrame(measure);
 
         return () => cancelAnimationFrame(frameId);
-    }, []);
+    }, [maxRun]);
 
     return isLowPower;
 }

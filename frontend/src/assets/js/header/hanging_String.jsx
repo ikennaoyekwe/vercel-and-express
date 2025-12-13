@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 
 export const menuItems = [
@@ -8,7 +8,26 @@ export const menuItems = [
     {name: "Contact", color: "#8b5cf6", path: "/contactMe"},
 ]
 
-export function menuButtons(hoveredItem, menuItemsRef, setHoveredItem) {
+export function useChangeMobilHeight(){
+    const containerRef = useRef(null);
+    useEffect(()=>{
+        if(!containerRef.current) return;
+        if(window.innerWidth < 700){
+            containerRef.current.classList.remove('h-[25vh]');
+            containerRef.current.classList.add('h-[35vh]');
+        }
+    },[]);
+    return containerRef;
+}
+
+export function useHoveredItem(){
+    const [hoveredItem, setHoveredItem] = useState(null);
+    const hoveredItemRef = useRef(null);
+    useEffect(() => { hoveredItemRef.current = hoveredItem }, [ hoveredItem ]);
+    return {hoveredItem, setHoveredItem, hoveredItemRef};
+}
+
+export function menuButtons(hoveredItem, setHoveredItem, menuItemsRef) {
     return(
 
         menuItems.map((item, idx) => (
@@ -40,18 +59,23 @@ export function menuButtons(hoveredItem, menuItemsRef, setHoveredItem) {
     )
 }
 
-export function hangingStringUseEffect(canvasRef, containerRef, requestRef, hoveredItemRef, menuItemsRef, menuItems, endIconRef) {
+export function useHangingStringRenderer(containerRef, hoveredItemRef) {
+    const canvasRef = useRef(null);
+    const requestRef = useRef(null);
+    const endIconRef = useRef(null);
+    const menuItemsRef = useRef([]);
     useEffect(() => {
         const canvas = canvasRef.current;
         const container = containerRef.current;
         if (!canvas || !container) return;
-        const cleanup = hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
+        const cleanup = hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, endIconRef);
         return () => cleanup();
     }, []);
+    return {canvasRef, menuItemsRef, endIconRef};
 }
 
 
-export default function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, menuItems, endIconRef) {
+export default function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, endIconRef) {
     const ctx = canvas.getContext("2d", { alpha: true });
 
     const resizeCanvas = () => {

@@ -1,5 +1,33 @@
 import * as THREE from 'three';
 import SimplexNoise from "simplex-noise";
+import {useEffect, useRef} from "react";
+
+export function useInitialize_andUpdate_wave(){
+    const canvasRef = useRef(null);
+    const waveController = useRef(null);
+
+    useEffect(() => {
+        if (canvasRef.current) {
+            const { cleanup, update } = init(canvasRef.current);
+            waveController.current = update;
+
+            return () => {
+                cleanup();
+                waveController.current = null;
+            };
+        }
+    }, []);
+
+    return {canvasRef, waveController};
+}
+
+export function useUpdateOnScroll(waveController, scrollState){
+    useEffect(() => {
+        if (waveController.current) {
+            waveController.current(scrollState);
+        }
+    }, [scrollState]);
+}
 
 export function init(canvasElement) {
     let renderer, scene, camera;

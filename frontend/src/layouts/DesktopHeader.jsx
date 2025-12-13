@@ -1,6 +1,5 @@
 import React from "react";
-import verticalMenuUseRefs, {changeWithForMobileUseEffect, changeHoveredItemUseEffect} from "../assets/js/header/verticalMenuFunctions.js";
-import {menuItems, menuButtons, hangingStringUseEffect} from "../assets/js/header/hanging_String.jsx";
+import {menuButtons, useHangingStringRenderer, useChangeMobilHeight, useHoveredItem,} from "../assets/js/header/hanging_String.jsx";
 import returnIcon from "../assets/js/header/headerIcons.js";
 import {useLocation} from "react-router-dom";
 
@@ -8,11 +7,10 @@ export default function VerticalHangingMenu() {
 
     const location = useLocation();
     const {imgSrc, imgAlt, imgWidth = "60px", imgHeight = "60px"} = returnIcon(location.pathname);
-    const {canvasRef, containerRef, menuItemsRef, requestRef, hoveredItemRef, endIconRef, hoveredItem, setHoveredItem} = verticalMenuUseRefs();
 
-    changeWithForMobileUseEffect(containerRef);
-    changeHoveredItemUseEffect(hoveredItem, hoveredItemRef);
-    hangingStringUseEffect(canvasRef, containerRef, requestRef, hoveredItemRef, menuItemsRef, menuItems, endIconRef);
+    const containerRef = useChangeMobilHeight();
+    const {hoveredItem, setHoveredItem, hoveredItemRef} = useHoveredItem();
+    const {canvasRef, menuItemsRef, endIconRef} = useHangingStringRenderer(containerRef, hoveredItemRef);
 
 
     return (
@@ -22,7 +20,7 @@ export default function VerticalHangingMenu() {
             aria-label="Side Navigation"
         >
             <canvas id="header-canvas" ref={canvasRef} className="absolute top-0 left-0 w-full h-full block"/>
-            {menuButtons(hoveredItem, menuItemsRef, setHoveredItem)}
+            {menuButtons(hoveredItem, setHoveredItem, menuItemsRef)}
             <div
                 ref={endIconRef}
                 className="absolute top-0 left-0 pointer-events-none origin-top"
