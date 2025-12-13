@@ -1,7 +1,7 @@
 import React from 'react';
 import {usePerformanceMonitor} from "../../assets/js/hooks/usePerformanceMonitor.js";
-import initialParticlesUseEffect from "../../assets/js/mainPage/Particles.js";
-import {scrollUseEffect, returnHooksVariables, fetchIpUseEffect} from "../../assets/js/mainPage/mainPageScripts.js";
+import useInitParticles from "../../assets/js/mainPage/Particles.js";
+import {useScroll, useIp} from "../../assets/js/mainPage/mainPageScripts.js";
 import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
 import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
@@ -12,14 +12,12 @@ import {isMobile} from "react-device-detect";
 
 export default function MainPage() {
 
+    console.log(window.navigator.hardwareConcurrency + " | " + window.navigator.deviceMemory);
     const isLowPower = usePerformanceMonitor();
-    console.log(isLowPower + " | " + window.navigator.hardwareConcurrency + " | " + window.navigator.deviceMemory);
-    const {userIp, setUserIp, firstPosition, svgOpacity, setSvgOpacity, canvasRef} = returnHooksVariables();
-
-    initialParticlesUseEffect(canvasRef);
-    fetchIpUseEffect(userIp, setUserIp);
-    scrollUseEffect(setSvgOpacity, firstPosition);
-
+    const svgOpacity = useScroll();
+    const canvasRef = useInitParticles();
+    const ip = useIp();
+    // console.log(ip);
 
     return (
         <div>

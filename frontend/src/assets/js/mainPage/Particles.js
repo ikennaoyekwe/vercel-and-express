@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 
 // ------------------------------------------------------------
 //  CONFIGURATION
@@ -214,10 +214,12 @@ export function initParticles(canvas) {
     };
 }
 
-export default function initialParticlesUseEffect(canvasRef) {
+export default function useInitParticles() {
+    const canvasRef = useRef(null);
     useEffect(() => {
         const canvas = canvasRef.current;
         const cleanup = initParticles(canvas);
         return () => cleanup();
     }, []);
+    return canvasRef;
 }
