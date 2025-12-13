@@ -3,3 +3,6 @@
 /backend/tests
 /backend/.env
 /backend/testIndex.ts
+
+.vercel
+.env*.local

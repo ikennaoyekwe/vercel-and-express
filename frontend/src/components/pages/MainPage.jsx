@@ -21,6 +21,10 @@ export default function MainPage() {
 
     return (
         <div>
+            <div>
+                <h1>Some Texts Here For Text</h1><br/>
+                <h1>{ip.country_name} | {ip.ip} | {ip.latitude} | {ip.longitude} </h1>
+            </div>
             <div id="lyrics" className="max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
                 <Lyrics svgOpacity={svgOpacity}/>
             </div>
