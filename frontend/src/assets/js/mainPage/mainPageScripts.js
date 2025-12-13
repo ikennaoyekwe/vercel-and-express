@@ -18,6 +18,7 @@ export function useIp() {
                 longitude: json2?.longitude ?? null,
                 country_name: json2?.country_name ?? null
             }
+            console.log(data);
             setIp(data);
         }
         fetchIp()
