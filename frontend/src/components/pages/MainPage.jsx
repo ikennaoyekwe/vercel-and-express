@@ -8,6 +8,7 @@ import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
 import NameTag from "./pages_components/MainPage/nameTag.jsx";
 import Globe_efficient from "./pages_components/MainPage/globe_efficient.jsx";
+import SvgGlobe from "./pages_components/MainPage/svgGlobe.jsx";
 import {isMobile} from "react-device-detect";
 
 export default function MainPage() {
@@ -30,6 +31,7 @@ export default function MainPage() {
                 </div>
             ) : (
                 <div id="globe" className="fixed top-[36%] left-0 -translate-x-1/2 -translate-y-1/2">
+                    <SvgGlobe width="1000" height="1000"/>
                     {/*<Globe_efficient width="1000" height="1000"/>*/}
                 </div>
             )}
