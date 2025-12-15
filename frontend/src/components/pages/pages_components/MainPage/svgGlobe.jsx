@@ -99,7 +99,7 @@ export default function SvgGlobe({ width = 400, height = 400, ip }) {
         return () => {
             timer.stop();
         };
-    }, [landData, locationData, width, height]);
+    }, [landData, width, height]);
 
     return (
         <div style={{ width: width, height: height, position: 'relative' }}>
