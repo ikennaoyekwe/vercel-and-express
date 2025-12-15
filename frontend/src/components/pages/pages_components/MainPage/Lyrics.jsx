@@ -6,22 +6,22 @@ export default function Lyrics({svgOpacity, ip}) {
     const messageRef = useRef(null);
 
     const formatText = (text) => {
-        const words = text.trim().split(" ");
-        const formatted = words
-            .map((word) => {
-                const chars = word
+        const lines = text.trim().split("\n");
+        const formatted = lines
+            .map((line) => {
+                const chars = line
                     .split("")
-                    .map((c) => `<i>${c}</i>`)
+                    .map((c) => {
+                        if (c === " ") return "<i>&nbsp;</i>";
+                        return `<i>${c}</i>`;
+                    })
                     .join("");
-
-                return `<span>${chars}</span><br/>`;
+                return `<span>${chars}</span>`;
             })
-            .join(" ");
-
+            .join("<br/>");
         return formatted;
     };
 
-    // Replay animation function
     const replayAnimation = () => {
         const el = messageRef.current;
         if (!el) return;
@@ -30,7 +30,6 @@ export default function Lyrics({svgOpacity, ip}) {
 
         requestAnimationFrame(() => {
             void el.offsetHeight;
-
             requestAnimationFrame(() => {
                 el.classList.add("animate");
             });
@@ -38,19 +37,22 @@ export default function Lyrics({svgOpacity, ip}) {
     };
 
     useEffect(() => {
+        // Guard clause to ensure we have data
         if (!ip || !ip.ip) return;
 
         const el = messageRef.current;
         if (!el) return;
 
-        const textToAnimate = `${ip.ip} ${ip.country_name},${ip.city || ''} Welcome`;
+        // 3. Construct the string using \n to mark where you want lines to break.
+        // Spaces inside the variables (like city name) will now stay on the same line.
+        const textToAnimate = `${ip.ip}\n${ip.country_name} ${ip.city || ''}\nWelcome`;
 
         el.innerHTML = formatText(textToAnimate);
 
         requestAnimationFrame(() => {
             el.classList.add("animate");
         });
-    }, [ip]);
+    }, [ip]); // Rerun when IP data arrives
 
     useEffect(() => {
         const interval = setInterval(() => {
