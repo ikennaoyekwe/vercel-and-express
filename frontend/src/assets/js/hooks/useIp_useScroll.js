@@ -1,28 +1,34 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {isMobile} from "react-device-detect";
 
-
 export function useIp() {
     const [ip, setIp] = useState({});
+
     useEffect(() => {
         const fetchIp = async () => {
-            if(localStorage.getItem("PC_ID") === "771a4fc0-c417-4800-a64d-d0558abf0993") return {message: "Local was Detected"};
-
-            const response = await fetch("/api/tests/getIp");
-            const json1 = await response.json();
-            const response2 = await fetch("https://ipapi.co/json/");
-            const json2 = await response2.json();
-            const data = {
-                ip: json1?.ip ?? null,
-                latitude: json2?.latitude ?? null,
-                longitude: json2?.longitude ?? null,
-                country_name: json2?.country_name ?? null
+            if(localStorage.getItem("PC_ID") === "771a4fc0-c417-4800-a64d-d0558abf0993") {
+                setIp({message: "Localhost was Detected", latitude: 51, longitude: 41, country_name: "Localhost"});
+                return;
             }
-            console.log(data);
-            setIp(data);
+            try{
+                const response = await fetch("/api/tests/getIp");
+                const json1 = await response.json();
+                const response2 = await fetch("https://ipapi.co/json/");
+                const json2 = await response2.json();
+                const data = {
+                    ip: json1?.ip ?? null,
+                    latitude: json2?.latitude ?? null,
+                    longitude: json2?.longitude ?? null,
+                    country_name: json2?.country_name ?? null
+                }
+                console.log(data);
+                setIp(data);
+            }catch (err) {
+                console.error("API Error", err);
+                setIp({ message: "error has happened in fetching location", latitude: 51, longitude: 41, country_name: "Nigeria"});
+            }
         }
         fetchIp()
-            .then((r)=>console.log(r))
             .catch(e => console.log("FAILED ... "));
     }, []);
 

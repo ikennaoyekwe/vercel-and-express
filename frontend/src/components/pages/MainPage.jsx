@@ -1,7 +1,7 @@
 import React from 'react';
 import {usePerformanceMonitor} from "../../assets/js/hooks/usePerformanceMonitor.js";
 import useInitParticles from "../../assets/js/mainPage/Particles.js";
-import {useScroll, useIp} from "../../assets/js/mainPage/mainPageScripts.js";
+import {useScroll, useIp} from "../../assets/js/hooks/useIp_useScroll.js";
 import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
 import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
@@ -18,7 +18,7 @@ export default function MainPage() {
     const svgOpacity = useScroll();
     const canvasRef = useInitParticles();
     const ip = useIp();
-    // console.log(ip);
+    console.log(ip);
 
     return (
         <div>
@@ -27,12 +27,11 @@ export default function MainPage() {
             </div>
             {isMobile ? (
                 <div id="globe" className="fixed top-1/3 left-0 -translate-x-1/2 -translate-y-1/2">
-                    {/*<Globe_efficient width="500" height="500"/>*/}
+                    <SvgGlobe width="500" height="500"/>
                 </div>
             ) : (
                 <div id="globe" className="fixed top-[36%] left-0 -translate-x-1/2 -translate-y-1/2">
                     <SvgGlobe width="1000" height="1000"/>
-                    {/*<Globe_efficient width="1000" height="1000"/>*/}
                 </div>
             )}
 
