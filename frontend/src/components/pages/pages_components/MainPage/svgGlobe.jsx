@@ -2,51 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 
-// --- Helper: UUID Logic (Preserved from your code) ---
-const initUserId = () => {
-    if (!localStorage.getItem("PC_ID")) {
-        // Fallback for older browsers if crypto.randomUUID isn't available
-        const uuid = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2);
-        localStorage.setItem("PC_ID", uuid);
-    }
-};
-
-export default function SvgGlobe({ width = 400, height = 400 }) {
-    // Refs for direct DOM manipulation (High Performance)
+export default function SvgGlobe({ width = 400, height = 400, ip }) {
     const svgRef = useRef(null);
     const landPathRef = useRef(null);
     const pingPathRef = useRef(null);
     const ringPathRef = useRef(null);
 
+    const locationData = { latitude: ip.latitude, longitude: ip.longitude };
     // State for data
     const [landData, setLandData] = useState(null);
-    const [locationData, setLocationData] = useState(null);
 
-    // 1. Initialize User ID
-    useEffect(() => {
-        initUserId();
-    }, []);
-
-    // 2. Fetch Data (IP & TopoJSON)
     useEffect(() => {
         const fetchData = async () => {
-            // A. Fetch Location
-            let locData = { latitude: 10, longitude: 10 }; // Default fallback
-            try {
-                if (localStorage.getItem("PC_ID") !== "771a4fc0-c417-4800-a64d-d0558abf0993") {
-                    const locationResponse = await fetch(`https://ipapi.co/json/`);
-                    const ipResponse = await fetch('/api/tests/getIp').catch(() => ({ json: () => ({}) })); // Handle if API fails
-                    const locJson = await locationResponse.json();
-                    locData = {
-                        latitude: locJson.latitude || 51,
-                        longitude: locJson.longitude || 41
-                    };
-                }
-            } catch (err) {
-                console.error("Location Fetch Error", err);
-            }
-            setLocationData(locData);
-
             // B. Fetch Map Data
             try {
                 const mapData = await d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-110m.json");

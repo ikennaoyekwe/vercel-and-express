@@ -7,9 +7,7 @@ import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
 import NameTag from "./pages_components/MainPage/nameTag.jsx";
-import Globe_efficient from "./pages_components/MainPage/globe_efficient.jsx";
 import SvgGlobe from "./pages_components/MainPage/svgGlobe.jsx";
-import {isMobile} from "react-device-detect";
 
 export default function MainPage() {
 
@@ -23,17 +21,11 @@ export default function MainPage() {
     return (
         <div>
             <div id="lyrics" className="max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
-                <Lyrics svgOpacity={svgOpacity}/>
+                <Lyrics svgOpacity={svgOpacity} ip={ip}/>
             </div>
-            {isMobile ? (
-                <div id="globe" className="fixed top-1/3 left-0 -translate-x-1/2 -translate-y-1/2">
-                    <SvgGlobe width="500" height="500"/>
-                </div>
-            ) : (
-                <div id="globe" className="fixed top-[36%] left-0 -translate-x-1/2 -translate-y-1/2">
-                    <SvgGlobe width="1000" height="1000"/>
-                </div>
-            )}
+            <div id="globe" className="fixed md:top-[18%] left-[2%]">
+                <SvgGlobe width="500" height="500" ip={ip}/>
+            </div>
 
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
                 <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 mt-44">
