@@ -12,21 +12,10 @@ export function useChangeMobilHeight(){
     const containerRef = useRef(null);
     useEffect(()=>{
         if(!containerRef.current) return;
-        const handleResize = () => {
-            if(window.innerWidth < 700){
-                containerRef.current.classList.remove('h-[25vh]');
-                containerRef.current.classList.add('h-[35vh]');
-            } else {
-                // Optional: Revert if screen gets bigger?
-                containerRef.current.classList.remove('h-[35vh]');
-                containerRef.current.classList.add('h-[25vh]');
-            }
-        };
-
-        // Check initially and on resize
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        if(window.innerWidth < 700){
+            containerRef.current.classList.remove('h-[25vh]');
+            containerRef.current.classList.add('h-[35vh]');
+        }
     },[]);
     return containerRef;
 }
@@ -40,31 +29,29 @@ export function useHoveredItem(){
 
 export function menuButtons(hoveredItem, setHoveredItem, menuItemsRef) {
     return(
+
         menuItems.map((item, idx) => (
                 <div
                     key={item.name}
                     ref={(el) => (menuItemsRef.current[idx] = el)}
                     className="absolute top-0 left-0 pointer-events-auto flex pr-3.5"
                     onMouseEnter={() => setHoveredItem(idx)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    // Optimization: Add will-change here to tell browser these move
-                    style={{ willChange: "transform" }}
-                >
+                    onMouseLeave={() => setHoveredItem(null)}>
                     <Link to={item.path} name="About Me">
-                        <button className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}
-                                style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)", opacity: 0.5,}}>
+                    <button className={`group relative px-4 py-2 rounded-lg transition-all duration-300 ease-out flex items-center gap-3`}
+                            style={{transform: hoveredItem === idx ? "scale(1.1) translateX(-10px)" : "scale(1)", opacity: 0.5,}}>
 
-                            <span style={{color: "black", fontWeight: hoveredItem === idx ? "bold" : "normal"}}>{item.name}</span>
+                        <span style={{color: "black", fontWeight: hoveredItem === idx ? "bold" : "normal"}}>{item.name}</span>
 
-                            <div
-                                className="absolute inset-0 -z-10 rounded-lg transition-all duration-300 border border-white/10"
-                                style={{
-                                    backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(0, 0, 0, 0.1)",
-                                    borderColor: hoveredItem === idx ? item.color : "rgba(0,0,0,0.8)",
-                                    boxShadow: hoveredItem === idx ? `6px 2px 5px 0px ${item.color}` : ""
-                                }}
-                            />
-                        </button>
+                        <div
+                            className="absolute inset-0 -z-10 rounded-lg transition-all duration-300 border border-white/10"
+                            style={{
+                                backgroundColor: hoveredItem === idx ? `${item.color}20` : "rgba(0, 0, 0, 0.1)",
+                                borderColor: hoveredItem === idx ? item.color : "rgba(0,0,0,0.8)",
+                                boxShadow: hoveredItem === idx ? `6px 2px 5px 0px ${item.color}` : ""
+                            }}
+                        />
+                    </button>
                     </Link>
                 </div>
             )
@@ -88,20 +75,11 @@ export function useHangingStringRenderer(containerRef, hoveredItemRef) {
 }
 
 
-function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, endIconRef) {
+export default function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItemsRef, endIconRef) {
     const ctx = canvas.getContext("2d", { alpha: true });
-
-    // --- Cache Dimensions ---
-    let cachedWidth = 0;
-    let cachedHeight = 0;
 
     const resizeCanvas = () => {
         const { width, height } = container.getBoundingClientRect();
-
-        // Update the cached values used in animation
-        cachedWidth = width;
-        cachedHeight = height;
-
         const dpr = window.devicePixelRatio || 1;
         canvas.width = width * dpr;
         canvas.height = height * dpr;
@@ -116,10 +94,10 @@ function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItems
     let time = 0;
 
     const getWaveX = (y, t) => {
-        // Use CACHED values
-        const normalized = y / cachedHeight;
-        const baseX = cachedWidth - 50;
-
+        const height = canvas.offsetHeight;
+        const width = canvas.offsetWidth;
+        const normalized = y / height;
+        const baseX = width - 50;
         const sway = Math.sin(t * 0.8) * 20 * normalized;
         const ripple = Math.cos(normalized * Math.PI * 5 - t * 2) * 5;
         const hoverEffect = hoveredItemRef.current !== null ? Math.sin(t * 10) * 2 : 0;
@@ -128,11 +106,11 @@ function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItems
     };
 
     const animate = () => {
-        // Use CACHED values
-        const width = cachedWidth;
-        const height = cachedHeight;
+        const width = canvas.offsetWidth;
+        const height = canvas.offsetHeight;
         const baseX = width - 50;
 
+        // Stop string 50px before bottom to fit the icon
         const stringLength = height - 50;
 
         ctx.clearRect(0, 0, width, height);
@@ -188,19 +166,19 @@ function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItems
         ctx.fill();
 
         // --- ANIMATE END ICON ---
-        if (endIconRef?.current) {
+        // SAFE CHECK: Ensure endIconRef exists, has a current value, AND has a style property
+        if (endIconRef?.current?.style) {
             const prevX = getWaveX(stringLength - 5, time);
             const deltaX = endX - prevX;
             const deltaY = 5;
             const angleDeg = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
 
-            // WRITE ONLY (No reads here)
             endIconRef.current.style.transform =
                 `translate3d(${endX}px, ${stringLength}px, 0) translate(-50%, 0) rotate(${angleDeg}deg)`;
         }
 
         // --- UPDATE MENU ITEMS ---
-        const totalItems = menuItems.length;
+        const totalItems = menuItems.length; // Ensure this variable is accessible!
         const startY = 0.15 * height;
         const endY = 0.85 * stringLength;
         const totalRange = endY - startY;
@@ -219,7 +197,6 @@ function hanging_String(canvas, requestRef, container, hoveredItemRef, menuItems
             ctx.fill();
 
             if (menuItemsRef.current[idx]) {
-                // WRITE ONLY (No reads here)
                 menuItemsRef.current[idx].style.transform =
                     `translate3d(${waveX}px, ${y}px, 0) translate(-100%, -50%)`;
             }
