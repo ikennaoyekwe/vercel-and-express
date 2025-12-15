@@ -29,6 +29,7 @@ export function useIp() {
                 setIp({ message: "error has happened in fetching location", latitude: 51, longitude: 41, country_name: "Nigeria", city: "home arash samandar", ip: "127.0.0.1"});
             }
         }
+        console.log("fetch ran");
         fetchIp()
             .catch(e => console.log("FAILED ... "));
     }, []);
@@ -50,6 +51,7 @@ export function useScroll(){
 
             firstPosition.current = window.scrollY;
         }
+        console.log(svg);
         window.addEventListener("scroll", scroll, {passive: true});
         return () => window.removeEventListener("scroll", scroll);
     }, []);
