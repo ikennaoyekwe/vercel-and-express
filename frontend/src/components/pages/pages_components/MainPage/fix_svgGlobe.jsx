@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState, useMemo, memo } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 
-const SvgGlobe = memo(function SvgGlobe({ width = 400, height = 400, ip }) {
+const SvgGlobe = React.memo(function SvgGlobe({ width = 400, height = 400, ip }) {
     const svgRef = useRef(null);
     const landPathRef = useRef(null);
     const pingPathRef = useRef(null);
@@ -11,6 +11,7 @@ const SvgGlobe = memo(function SvgGlobe({ width = 400, height = 400, ip }) {
     const [landData, setLandData] = useState(null);
 
     const locationData = useMemo(() => {
+        if(!ip || !ip.latitude || !ip.longitude) return null;
         return { latitude: ip.latitude, longitude: ip.longitude };
     }, [ip.latitude, ip.longitude]);
 
@@ -49,7 +50,7 @@ const SvgGlobe = memo(function SvgGlobe({ width = 400, height = 400, ip }) {
         const pathGenerator = d3.geoPath().projection(projection);
 
         const speed = 0.015;
-
+        
         const start = Date.now();
 
         const timer = d3.timer(() => {
