@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import "../../../../assets/css/lyrics.scss";
+import SvgGlobe from "./svgGlobe.jsx";
 
 export default function Lyrics({svgOpacity, ip}) {
 
@@ -63,10 +64,11 @@ export default function Lyrics({svgOpacity, ip}) {
     }, []);
 
     return (
-        <div className="component" style={{opacity: svgOpacity}}>
+        <div className="component">
             <p ref={messageRef} className="typewriter js-typewriter">
                 Loading....
             </p>
+            {svgOpacity !== 1 && (<SvgGlobe svgOpacity={0} ip={ip} />)}
         </div>
     );
 }

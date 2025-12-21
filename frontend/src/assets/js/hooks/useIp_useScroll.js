@@ -7,56 +7,55 @@ export function useIp() {
     useEffect(() => {
         const fetchIp = async () => {
             if(localStorage.getItem("PC_ID") === "771a4fc0-c417-4800-a64d-d0558abf0993") {
-                setIp({message: "Localhost was Detected", latitude: 10, longitude: 10, country_name: "Localhost", city: "home arash samandar", ip: "127.0.0.1"});
+                setIp({message: "Localhost was Detected", latitude: 10, longitude: 10, country_name: "Localhost", city: "Salamander Home", ip: "127.0.0.1"});
                 return;
             }
-            try{
-                const response = await fetch("/api/tests/getIp");
-                const json1 = await response.json();
-                const response2 = await fetch("https://ipapi.co/json/");
-                const json2 = await response2.json();
-                const data = {
-                    ip: json1?.ip ?? null,
-                    latitude: json2?.latitude ?? null,
-                    longitude: json2?.longitude ?? null,
-                    country_name: json2?.country_name ?? null,
-                    city: json2?.city ?? null,
-                }
-                console.log(data);
-                setIp(data);
-            }catch (err) {
-                console.error("API Error", err);
-                setIp({ message: "error has happened in fetching location", latitude: 51, longitude: 41, country_name: "Nigeria", city: "home arash samandar", ip: "127.0.0.1"});
-            }
+            const json1 = await fetch("/api/tests/getIp")
+                .then(res => res.json())
+                .catch(err => {
+                    console.error("Internal IP fetch failed", err);
+                    return { ip: "0.0.0.0" }; // Fallback value
+                });
+            const json2 = await fetch("https://ipapi.co/json/")
+                .then(res => res.json())
+                .catch(err => {
+                    console.error("External Geo fetch failed", err);
+                    return { latitude: 51, longitude: 41, country_name: "Error", city: "Proxy" }; // Fallback
+                });
+            const data = {
+                ip: json1?.ip ?? "0.0.0.0",
+                latitude: json2?.latitude ?? 51,
+                longitude: json2?.longitude ?? 41,
+                country_name: json2?.country_name ?? "Unknown",
+                city: json2?.city ?? "Unknown",
+            };
+            setIp(data);
         }
-        console.log("fetch ran");
-        fetchIp()
-            .catch(e => console.log("FAILED ... "));
+        fetchIp();
     }, []);
 
     return ip;
 }
 
-export function useScroll(){
-    const firstPosition = useRef(0);
-    const [svg, setSvg] = useState(1);
+export function useScroll() {
+    const [opacity, setOpacity] = useState(1);
 
     useEffect(() => {
-        const scroll = () => {
-            const prevY = firstPosition.current;
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            const threshold = 400; // The scroll distance (pixels) where you want the animation to finish
 
-            if (window.scrollY > prevY) setSvg(prevState => prevState - 0.035);
-            if(window.scrollY < prevY) setSvg(prevState => prevState + 0.035);
-            if(window.scrollY === 0) setSvg(1);
+            // Calculate a value between 1 and 0 based on scroll position
+            // This is deterministic and will never "drift"
+            const newOpacity = Math.max(0, 1 - scrollY / threshold);
+            setOpacity(newOpacity);
+        };
 
-            firstPosition.current = window.scrollY;
-        }
-        console.log(svg);
-        window.addEventListener("scroll", scroll, {passive: true});
-        return () => window.removeEventListener("scroll", scroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    return svg;
+    return opacity;
 }
 
 

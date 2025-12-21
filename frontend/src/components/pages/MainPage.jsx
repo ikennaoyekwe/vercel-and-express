@@ -19,20 +19,16 @@ export default function MainPage() {
 
     return (
         <div>
-            <div id="lyrics" className="max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
+            <div id="lyrics" className="fixed max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
                 <Lyrics svgOpacity={svgOpacity} ip={ip}/>
-            </div>
-            <div id="globe" className="fixed md:top-[18%] left-[2%] z-20">
-                <SvgGlobe width="500" height="500" ip={ip} svgOpacity={svgOpacity}/>
             </div>
             <div id="frameCounter" className="max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
                 <PerformanceMonitor setIsLowPower={setIsLowPower} />
             </div>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
-                <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 mt-44">
-                    <Svg_mainPage svgOpacity={svgOpacity} />
+                <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 mt-44 z-20">
+                    <Svg_mainPage svgOpacity={svgOpacity} ip={ip}/>
                 </div>
-
                 <div className="w-full flex justify-center select-none">
                     <div className="ml-5 w-full max-w-[420px]">
                         <TypeWriter svgOpacity={svgOpacity}/>

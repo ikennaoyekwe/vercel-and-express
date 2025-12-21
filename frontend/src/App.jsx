@@ -16,6 +16,7 @@ function AnimatedRoutes() {
     return (
         <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
+
                 <Route path="/" element={<MainLayout/>}>
 
                     <Route path="/" element={<MainPage/>}/>
@@ -25,8 +26,8 @@ function AnimatedRoutes() {
                     <Route path="/play" element={<PlayGround />}/>
 
                     <Route path="*" element={<NotFound404/>}/>
-
                 </Route>
+
                 <Route path="/wave" element={<MovingWave />}/>
             </Routes>
         </AnimatePresence>
