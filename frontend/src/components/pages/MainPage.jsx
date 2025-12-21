@@ -1,5 +1,4 @@
-import React from 'react';
-import {usePerformanceMonitor} from "../../assets/js/hooks/usePerformanceMonitor.js";
+import React, {useState} from 'react';
 import useInitParticles from "../../assets/js/mainPage/Particles.js";
 import {useScroll, useIp} from "../../assets/js/hooks/useIp_useScroll.js";
 import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
@@ -8,11 +7,12 @@ import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
 import NameTag from "./pages_components/MainPage/nameTag.jsx";
 import SvgGlobe from "./pages_components/MainPage/svgGlobe.jsx";
+import PerformanceMonitor from "./pages_components/MainPage/performanceMonitor.jsx";
 
 export default function MainPage() {
 
     // @todo : console.log(window.navigator.hardwareConcurrency + " | " + window.navigator.deviceMemory);
-    const isLowPower = usePerformanceMonitor();
+    const [isLowPower, setIsLowPower] = useState(false);
     const svgOpacity = useScroll();
     const canvasRef = useInitParticles();
     const ip = useIp();
@@ -25,7 +25,9 @@ export default function MainPage() {
             <div id="globe" className="fixed md:top-[18%] left-[2%] z-20">
                 <SvgGlobe width="500" height="500" ip={ip} svgOpacity={svgOpacity}/>
             </div>
-
+            <div id="frameCounter" className="max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
+                <PerformanceMonitor setIsLowPower={setIsLowPower} />
+            </div>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
                 <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 mt-44">
                     <Svg_mainPage svgOpacity={svgOpacity} />
