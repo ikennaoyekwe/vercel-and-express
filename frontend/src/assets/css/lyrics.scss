@@ -35,7 +35,7 @@ $color: #111;
             font-size: 1em;
             min-width: .4em;
             border-radius: 2px;
-            @for $i from 1 through 30 {
+            @for $i from 1 through 50 {
                 &:nth-of-type(#{$i}) {
                     animation-delay: $i*$delay-unit;
                 }

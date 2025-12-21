@@ -1,70 +1,105 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../../../../assets/css/lyrics.scss";
 import SvgGlobe from "./svgGlobe.jsx";
 
-export default function Lyrics({svgOpacity, ip}) {
-
+export default function Lyrics({ svgOpacity, ip }) {
     const messageRef = useRef(null);
+    const [runCount, setRunCount] = useState(0);
+    const fpsRef = useRef(0); // Use a ref so the interval can see the latest value without re-rendering
 
+    // --- 1. FPS COUNTER LOGIC (Independent) ---
+    useEffect(() => {
+        let frameId;
+        let frameCount = 0;
+        let startTime = performance.now();
+        let measurements = [];
+        const initTime = performance.now();
+
+        const MONITOR_DURATION = 3000;
+
+        const measure = (time) => {
+            frameCount++;
+            const elapsed = time - startTime;
+            if (elapsed >= 500) {
+                const currentFps = (frameCount / elapsed) * 1000;
+                measurements.push(currentFps);
+                startTime = time;
+                frameCount = 0;
+
+                const totalTime = performance.now() - initTime;
+                if (totalTime > MONITOR_DURATION) {
+                    const avgFps = measurements.reduce((a, b) => a + b, 0) / measurements.length;
+                    fpsRef.current = Math.round(avgFps); // Store latest FPS in Ref
+                    setRunCount(prev => prev + 1); // Trigger next 3s measurement cycle
+                    return;
+                }
+            }
+            frameId = requestAnimationFrame(measure);
+        };
+
+        frameId = requestAnimationFrame(measure);
+        return () => cancelAnimationFrame(frameId);
+    }, [runCount]);
+
+    // --- 2. TEXT FORMATTING LOGIC ---
     const formatText = (text) => {
         const lines = text.trim().split("\n");
-        const formatted = lines
-            .map((line) => {
-                const chars = line
-                    .split("")
-                    .map((c) => {
-                        if (c === " ") return "<i>&nbsp;</i>";
-                        return `<i>${c}</i>`;
-                    })
-                    .join("");
-                return `<span>${chars}</span>`;
-            })
-            .join("<br/>");
-        return formatted;
+        return lines.map((line) => {
+            const chars = line.split("").map((c) =>
+                c === " " ? "<i>&nbsp;</i>" : `<i>${c}</i>`
+            ).join("");
+            return `<span>${chars}</span>`;
+        }).join("<br/>");
     };
 
+    // This function updates the HTML content with current IP and latest FPS from Ref
+    const updateContent = () => {
+        if (!ip || !ip.ip || !messageRef.current) return;
+
+        const currentFps = fpsRef.current;
+        const fpsText = currentFps > 0 ? `${currentFps} Frame/Sec` : "Measuring Fps ...";
+
+        const textToAnimate = `${ip.ip}\n${ip.country_name} ${ip.city || ''}\n${fpsText}, ${window.navigator.hardwareConcurrency}Core, ${window.navigator.deviceMemory}GB\nWelcome `;
+        messageRef.current.innerHTML = formatText(textToAnimate);
+    };
+
+    // --- 3. ANIMATION FLOW LOGIC ---
     const replayAnimation = () => {
         const el = messageRef.current;
         if (!el) return;
 
-        el.classList.remove("animate");
+        // Step A: Update the text content right before the animation starts
+        // This picks up the latest FPS from the ref
+        updateContent();
 
+        // Step B: Reset CSS classes
+        el.classList.remove("animate");
         requestAnimationFrame(() => {
-            void el.offsetHeight;
+            void el.offsetHeight; // Force reflow
             requestAnimationFrame(() => {
                 el.classList.add("animate");
             });
         });
     };
 
+    // Triggered only when IP data first arrives
     useEffect(() => {
-        // Guard clause to ensure we have data
-        if (!ip || !ip.ip) return;
+        if (ip && ip.ip) {
+            updateContent();
+            messageRef.current?.classList.add("animate");
+        }
+    }, [ip]);
 
-        const el = messageRef.current;
-        if (!el) return;
-
-        // 3. Construct the string using \n to mark where you want lines to break.
-        // Spaces inside the variables (like city name) will now stay on the same line.
-        const textToAnimate = `${ip.ip}\n${ip.country_name} ${ip.city || ''}\nWelcome`;
-
-        el.innerHTML = formatText(textToAnimate);
-
-        requestAnimationFrame(() => {
-            el.classList.add("animate");
-        });
-    }, [ip]); // Rerun when IP data arrives
-
+    // The 4-second loop
     useEffect(() => {
         const interval = setInterval(() => {
             replayAnimation();
-        }, 4000);
-
+        }, 5000);
         return () => clearInterval(interval);
-    }, []);
+    }, [ip]); // Added ip as dependency to ensure updateContent works inside replay
 
     return (
-        <div className="component">
+        <div className="component select-none">
             <p ref={messageRef} className="typewriter js-typewriter">
                 Loading....
             </p>

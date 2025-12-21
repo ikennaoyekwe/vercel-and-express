@@ -6,7 +6,6 @@ import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
 import NameTag from "./pages_components/MainPage/nameTag.jsx";
-import SvgGlobe from "./pages_components/MainPage/svgGlobe.jsx";
 import PerformanceMonitor from "./pages_components/MainPage/performanceMonitor.jsx";
 
 export default function MainPage() {
@@ -19,11 +18,8 @@ export default function MainPage() {
 
     return (
         <div>
-            <div id="lyrics" className="fixed max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
+            <div id="lyrics" className="fixed max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0 z-20">
                 <Lyrics svgOpacity={svgOpacity} ip={ip}/>
-            </div>
-            <div id="frameCounter" className="max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0">
-                <PerformanceMonitor setIsLowPower={setIsLowPower} />
             </div>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
                 <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 mt-44 z-20">
