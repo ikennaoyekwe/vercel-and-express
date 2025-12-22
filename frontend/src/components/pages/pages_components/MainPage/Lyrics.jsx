@@ -99,11 +99,13 @@ export default function Lyrics({ svgOpacity, ip }) {
     }, [ip]); // Added ip as dependency to ensure updateContent works inside replay
 
     return (
-        <div className="component select-none">
+        <div className="component select-none mt-0">
             <p ref={messageRef} className="typewriter js-typewriter">
                 Loading....
             </p>
-            {svgOpacity !== 1 && (<SvgGlobe svgOpacity={0} ip={ip} />)}
+            <div className="under-hd:hidden">
+                {svgOpacity !== 1 && (<SvgGlobe svgOpacity={0} ip={ip} />)}
+            </div>
         </div>
     );
 }

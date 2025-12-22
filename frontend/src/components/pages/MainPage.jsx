@@ -6,7 +6,6 @@ import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
 import NameTag from "./pages_components/MainPage/nameTag.jsx";
-import PerformanceMonitor from "./pages_components/MainPage/performanceMonitor.jsx";
 
 export default function MainPage() {
 
@@ -18,7 +17,7 @@ export default function MainPage() {
 
     return (
         <div>
-            <div id="lyrics" className="fixed max-w-[70vw] md:max-w-[48vw] h-[50px] mx-0 z-20">
+            <div id="lyrics" className={`fixed max-w-[70vw] md:max-w-[48vw] h-[50px] z-20 ${svgOpacity < 0.9 ? "top-[-20px]" : ""}`}>
                 <Lyrics svgOpacity={svgOpacity} ip={ip}/>
             </div>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">

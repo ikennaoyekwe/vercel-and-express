@@ -10,6 +10,9 @@ export default {
         'under-2k': {
           max: '2000px',
         },
+        'under-hd': {
+          max: '1570px',
+        },
       },
     },
   },

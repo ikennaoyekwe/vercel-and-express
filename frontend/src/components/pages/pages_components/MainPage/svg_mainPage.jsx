@@ -5,7 +5,7 @@ export default function Svg_mainPage({svgOpacity, ip}) {
     return (
         <div className="relative w-full z-20">
             {svgOpacity === 1 && (
-                <div className="z-20 w-[200px] h-[200px] mt-[-15vh] pb-[50%] ml-[-15vw] under-2k:ml-[-25vw]">
+                <div className="z-20 w-[200px] h-[200px] under-hd:w-auto under-hd:h-auto under-hd:ml-[-2vw] under-hd:mt-[-2vh] under-hd:pt-[-50%] mt-[-15vh] pb-[50%] ml-[-15vw] under-2k:ml-[-25vw]">
                     <SvgGlobe ip={ip} className="w-full h-full"/>
                 </div>
             )}
