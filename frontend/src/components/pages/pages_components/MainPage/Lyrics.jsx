@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../../../../assets/css/lyrics.scss";
-import SvgGlobe from "./svgGlobe.jsx";
+import "../../../../assets/sass/lyrics.scss";
+// import SvgGlobe from "./svgGlobe.jsx";
 
 export default function Lyrics({ svgOpacity, ip }) {
     const messageRef = useRef(null);
@@ -102,9 +102,9 @@ export default function Lyrics({ svgOpacity, ip }) {
             <p ref={messageRef} className="typewriter js-typewriter">
                 Loading....
             </p>
-            <div className="under-hd:hidden">
-                {svgOpacity !== 1 && (<SvgGlobe svgOpacity={0} ip={ip} />)}
-            </div>
+            {/*<div className="under-hd:hidden">*/}
+            {/*    {svgOpacity !== 1 && (<SvgGlobe svgOpacity={0} ip={ip} />)}*/}
+            {/*</div>*/}
         </div>
     );
 }

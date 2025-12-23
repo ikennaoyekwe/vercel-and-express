@@ -1,0 +1,30 @@
+.globe-container
+  z-index: 20
+  width: 200px
+  height: 200px
+  margin-top: -15vh
+  padding-bottom: 50%
+  margin-left: -15vw
+
+  @media (max-width: 2000px)
+    margin-left: -25vw
+
+  @media (max-width: 1500px)
+    width: auto
+    height: auto
+    margin-left: auto
+    margin-right: auto
+    margin-top: -15vh
+    padding-bottom: 45px
+
+  @media(max-width: 600px)
+    display: none
+
+  @media(min-width: 600px)
+    &.globe-hidden
+      visibility: hidden
+      position: absolute
+
+.globe-svg
+  width: 100%
+  height: 100%
