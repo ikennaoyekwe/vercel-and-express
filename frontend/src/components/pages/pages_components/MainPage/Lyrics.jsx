@@ -58,7 +58,7 @@ export default function Lyrics({ svgOpacity, ip }) {
         const currentFps = fpsRef.current;
         const fpsText = currentFps > 0 ? `${currentFps} Frame/Sec` : "Measuring Fps ...";
 
-        const textToAnimate = `${ip.ip}\n${ip.country_name} ${ip.city || ''}\n${fpsText}, ${window.navigator.hardwareConcurrency}Core, ${window.navigator.deviceMemory}GB\nWelcome `;
+        const textToAnimate = `${ip.ip}\n${ip.country_name} ${ip.city || ''}\n${fpsText} ${window.navigator.hardwareConcurrency}Core ${window.navigator.deviceMemory}GB\nWelcome `;
         messageRef.current.innerHTML = formatText(textToAnimate);
     };
 

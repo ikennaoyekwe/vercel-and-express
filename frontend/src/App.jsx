@@ -23,11 +23,10 @@ function AnimatedRoutes() {
                     <Route path="/aboutMe" element={<AbouteMe/>}/>
                     <Route path="/contactMe" element={<ContactMe/>}/>
                     <Route path="/techStacks" element={<TechStack/>}/>
-                    <Route path="/play" element={<PlayGround />}/>
 
                     <Route path="*" element={<NotFound404/>}/>
                 </Route>
-
+                <Route path="/play" element={<PlayGround />}/>
                 <Route path="/wave" element={<MovingWave />}/>
             </Routes>
         </AnimatePresence>

@@ -1,10 +1,12 @@
 import React from "react";
+import CubeText from "./pages_components/MainPage/cubeText.jsx";
 
 export default function PlayGround() {
 
     return (
-        <div className="flex flex-col text-center min-h-[90vh] justify-center items-center">
+        <div className="">
             <h1>Welcome To PlayGround</h1>
+            <CubeText/>
         </div>
     )
 }

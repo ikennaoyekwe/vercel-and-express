@@ -1,0 +1,384 @@
+/* Container to isolate the 3D scene from the rest of your React app */
+.chessboard-scene {
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    perspective: 100vmin;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle, #1d1e22, #1c1c1c);
+}
+
+.chessboard-scene * {
+    transform-style: preserve-3d;
+}
+
+.chessboard {
+    --dark: #3a3634;
+    --light: #eacba8;
+    --black: #333333;
+    --white: #f8d6a2;
+
+    animation: rotateBoard 20s linear infinite;
+    display: grid;
+    width: 65vmin;
+    aspect-ratio: 1/1;
+    grid-auto-rows: 1fr;
+    grid-auto-columns: 1fr;
+
+    /* Standard Grid Template */
+    grid-template-areas:
+    'a8 b8 c8 d8 e8 f8 g8 h8'
+    'a7 b7 c7 d7 e7 f7 g7 h7'
+    'a6 b6 c6 d6 e6 f6 g6 h6'
+    'a5 b5 c5 d5 e5 f5 g5 h5'
+    'a4 b4 c4 d4 e4 f4 g4 h4'
+    'a3 b3 c3 d3 e3 f3 g3 h3'
+    'a2 b2 c2 d2 e2 f2 g2 h2'
+    'a1 b1 c1 d1 e1 f1 g1 h1';
+
+    place-items: center;
+    background: 0 0 / 25% 25% repeating-conic-gradient(var(--dark) 0 25%, var(--light) 25% 50%);
+    transform: rotateX(75deg);
+    position: relative;
+    container-type: inline-size;
+}
+
+/* Pause Control Class */
+.chessboard.paused {
+    animation-play-state: paused;
+}
+
+/* Board Base Shadow */
+.chessboard::after {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    border-radius: 50%;
+    mask-image: radial-gradient(black, transparent 50%);
+    background: 0 0 / 12.5% 12.5% repeating-conic-gradient(var(--dark) 0 25%, var(--light) 25% 50%);
+    transform: translateZ(-5cqi);
+}
+
+/* --- SIDES --- */
+.chessboard > .sides {
+    display: contents;
+}
+
+.chessboard > .sides > .x {
+    position: absolute;
+    inset: var(--i);
+    transform-origin: var(--o);
+    transform: rotateX(var(--x, 0deg)) rotateY(var(--y, 0deg));
+    background:
+            linear-gradient(hsl(0 0 0 / var(--l))),
+            repeating-linear-gradient(var(--d), var(--dark) 0 12.5%, var(--light) 0% 25%);
+}
+
+/* Updated selectors for data-side */
+.sides > .x[data-side="f"] { --i: 100% 0 -5% 0; --o: 50% 0%; --d: 90deg; --x: -90deg; --l: .50; }
+.sides > .x[data-side="b"] { --i: -5% 0 100% 0; --o: 50% 100%; --d: 270deg; --x: 90deg; --l: .50; }
+.sides > .x[data-side="l"] { --i: 0 100% 0 -5%; --o: 100% 50%; --d: 0deg; --y: -90deg; --l: .25; }
+.sides > .x[data-side="r"] { --i: 0 -5% 0 100%; --o: 0% 50%; --d: 180deg; --y: 90deg; --l: .25; }
+
+/* --- PIECES --- */
+.piece {
+    --s: 7cqi;
+    --band-gradient:
+            #0000 calc(100% - var(--s) * .20),
+            var(--clr-opp) 0 calc(100% - var(--s) * .15),
+            #0000 0;
+
+    /* Note: grid-area is handled via inline styles in React now */
+    width: var(--s);
+    aspect-ratio: 1/1;
+    position: relative;
+    background: var(--clr);
+}
+
+/* Colors via data attributes */
+.piece[data-color="white"] { --clr: var(--white); --clr-opp: var(--black); }
+.piece[data-color="black"] { --clr: var(--black); --clr-opp: var(--white); transform: rotate(180deg); }
+
+/* --- PAWN --- */
+.piece[data-type="pawn"]::before,
+.piece[data-type="pawn"]::after,
+.piece[data-type="pawn"] > .x::before,
+.piece[data-type="pawn"] > .x::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+            linear-gradient(hsl(0 0 0 / .2) 0 0),
+            linear-gradient(var(--bd), var(--band-gradient)),
+            var(--clr);
+    transform-origin: var(--to);
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+}
+
+.piece[data-type="pawn"]::before { --bd: 180deg; --to: bottom; --rx: -90deg; }
+.piece[data-type="pawn"]::after  { --bd: 0deg; --to: top; --rx: 90deg; }
+.piece[data-type="pawn"] > .x    { position: absolute; inset: 0; background: var(--clr); transform: translateZ(var(--s)); }
+.piece[data-type="pawn"] > .x::before { --bd: 90deg; --to: left; --ry: 90deg; }
+.piece[data-type="pawn"] > .x::after  { --bd: -90deg; --to: right; --ry: -90deg; }
+
+/* --- ROOK --- */
+.piece[data-type="rook"]::before,
+.piece[data-type="rook"]::after,
+.piece[data-type="rook"] > .x::before,
+.piece[data-type="rook"] > .x::after {
+    content: "";
+    position: absolute;
+    inset: var(--in);
+    background:
+            linear-gradient(hsl(0 0 0 / .2) 0 0),
+            linear-gradient(var(--bd), var(--band-gradient)),
+            var(--clr);
+    transform-origin: var(--to);
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+}
+
+.piece[data-type="rook"]::before { --in: -100% 0 0 0; --bd: 180deg; --to: bottom; --rx: -90deg; }
+.piece[data-type="rook"]::after  { --in: 0 0 -100% 0; --bd: 0deg; --to: top; --rx: 90deg; }
+.piece[data-type="rook"] > .x    { position: absolute; inset: 0; background: var(--clr); transform: translateZ(calc(var(--s) * 2)); }
+.piece[data-type="rook"] > .x::before { --in: 0 -100% 0 0; --bd: 90deg; --to: left; --ry: 90deg; }
+.piece[data-type="rook"] > .x::after  { --in: 0 0 0 -100%; --bd: -90deg; --to: right; --ry: -90deg; }
+
+/* --- KNIGHT --- */
+.piece[data-type="knight"]::before { /* front */
+    content: "";
+    position: absolute;
+    inset: calc(var(--s) * -1) 0 0 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(var(--band-gradient)), var(--clr);
+    transform-origin: bottom;
+    transform: rotateX(-90deg);
+}
+.piece[data-type="knight"]::after { /* back */
+    content: "";
+    position: absolute;
+    inset: 0 0 0 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(to top, var(--band-gradient)), var(--clr);
+    transform-origin: top;
+    transform: rotateX(90deg);
+}
+.piece[data-type="knight"] > .x { /* top */
+    position: absolute;
+    inset: 50% 0 0 0;
+    background: var(--clr);
+    transform: translateZ(calc(var(--s) * 2));
+}
+.piece[data-type="knight"] > .x::before { /* left */
+    content: "";
+    position: absolute;
+    inset: -100% -100% 0 0;
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to right, var(--band-gradient)), var(--clr);
+    transform-origin: left;
+    transform: rotateY(90deg);
+    clip-path: polygon(0 50%, 0 100%, 100% 100%, 100% 0%, 50% 0, 50% 50%);
+}
+.piece[data-type="knight"] > .x::after { /* right */
+    content: "";
+    position: absolute;
+    inset: -100% 0 0 -100%;
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to left, var(--band-gradient)), var(--clr);
+    transform-origin: right;
+    transform: rotateY(-90deg);
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 50%, 50% 50%, 50% 0);
+}
+.piece[data-type="knight"] > .y {
+    position: absolute;
+    inset: 0 0 50% 0;
+    background: var(--clr);
+    transform: translateZ(var(--s));
+}
+.piece[data-type="knight"] > .y::before {
+    content: "";
+    position: absolute;
+    inset: -100% 0 0 0;
+    transform-origin: bottom;
+    transform: rotateX(-90deg);
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), var(--clr);
+}
+
+/* --- BISHOP --- */
+.piece[data-type="bishop"]::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--s) * -1) 0 0 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(var(--band-gradient)), var(--clr);
+    transform-origin: bottom;
+    transform: rotateX(-90deg);
+}
+.piece[data-type="bishop"]::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(to top, var(--band-gradient)), var(--clr);
+    transform-origin: top;
+    transform: rotateX(90deg);
+}
+.piece[data-type="bishop"] > .x {
+    position: absolute;
+    inset: 100% 0 0 0;
+    background: var(--clr);
+    transform: translateZ(calc(var(--s) * 2));
+}
+.piece[data-type="bishop"] > .x::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--s) * -1) calc(var(--s) * -1) 0 0;
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to right, var(--band-gradient)), var(--clr);
+    transform-origin: left;
+    transform: rotateY(90deg);
+    clip-path: polygon(0 100%, 100% 100%, 100% 0%, 50% 0);
+}
+.piece[data-type="bishop"] > .x::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--s) * -1) 0 0 calc(var(--s) * -1);
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to left, var(--band-gradient)), var(--clr);
+    transform-origin: right;
+    transform: rotateY(-90deg);
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 50% 0);
+}
+.piece[data-type="bishop"] > .y {
+    position: absolute;
+    inset: calc(var(--s) / -2.3) 0 0 0;
+    background: var(--clr);
+    transform: translateZ(calc(var(--s) * 2)) rotateX(45deg);
+    transform-origin: bottom;
+}
+
+/* --- QUEEN --- */
+.piece[data-type="queen"]::before {
+    content: "";
+    position: absolute;
+    inset: -125% 0 0 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(var(--band-gradient)), var(--clr);
+    transform-origin: bottom;
+    transform: rotateX(-90deg);
+    clip-path: polygon(0 0, 50% 20%, 100% 0, 100% 100%, 0 100%);
+}
+.piece[data-type="queen"]::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 -125% 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(to top, var(--band-gradient)), var(--clr);
+    transform-origin: top;
+    transform: rotateX(90deg);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+}
+.piece[data-type="queen"] > .x {
+    position: absolute;
+    inset: 0;
+}
+.piece[data-type="queen"] > .x::before {
+    content: "";
+    position: absolute;
+    inset: 0 -125% 0 0;
+    transform-origin: left;
+    transform: rotateY(-90deg);
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to left, var(--band-gradient)), var(--clr);
+}
+.piece[data-type="queen"] > .x::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 -125%;
+    transform-origin: right;
+    transform: rotateY(90deg);
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to right, var(--band-gradient)), var(--clr);
+}
+.piece[data-type="queen"] > .y {
+    position: absolute;
+    inset: 0;
+    transform: translateZ(calc(var(--s) * 2.25));
+}
+.piece[data-type="queen"] > .y::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform-origin: left;
+    transform: rotateY(45deg);
+    background: var(--clr);
+}
+.piece[data-type="queen"] > .y::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform-origin: right;
+    transform: rotateY(-45deg);
+    background: var(--clr);
+}
+
+/* --- KING --- */
+.piece[data-type="king"]::before {
+    content: "";
+    position: absolute;
+    inset: -175% 0 0 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(var(--band-gradient)), var(--clr);
+    transform-origin: bottom;
+    transform: rotateX(-90deg);
+    clip-path: polygon(0 20%, 50% 0%, 100% 20%, 100% 100%, 0 100%);
+}
+.piece[data-type="king"]::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 -175% 0;
+    background: linear-gradient(hsl(0 0 0 / .2) 0 0), linear-gradient(to top, var(--band-gradient)), var(--clr);
+    transform-origin: top;
+    transform: rotateX(90deg);
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+}
+.piece[data-type="king"] > .x {
+    position: absolute;
+    inset: 0;
+}
+.piece[data-type="king"] > .x::before {
+    content: "";
+    position: absolute;
+    inset: 0 -125% 0 0;
+    transform-origin: left;
+    transform: rotateY(-90deg);
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to left, var(--band-gradient)), var(--clr);
+}
+.piece[data-type="king"] > .x::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 -125%;
+    transform-origin: right;
+    transform: rotateY(90deg);
+    background: linear-gradient(hsl(0 0 0 / .1) 0 0), linear-gradient(to right, var(--band-gradient)), var(--clr);
+}
+.piece[data-type="king"] > .y {
+    position: absolute;
+    inset: 0;
+    transform: translateZ(calc(var(--s) * 2.25));
+}
+.piece[data-type="king"] > .y::before {
+    content: "";
+    position: absolute;
+    inset: 0 calc(var(--s) * .29) 0 0;
+    transform-origin: left;
+    transform: rotateY(-45deg);
+    background: var(--clr);
+}
+.piece[data-type="king"] > .y::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 calc(var(--s) * .29);
+    transform-origin: right;
+    transform: rotateY(45deg);
+    background: var(--clr);
+}
+
+.controls {
+    font-family: system-ui, sans-serif;
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    color: white;
+    cursor: pointer;
+    z-index: 100;
+}
+
+@keyframes rotateBoard { to { transform: rotateX(75deg) rotateZ(360deg); } }
