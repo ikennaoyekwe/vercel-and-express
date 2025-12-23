@@ -1,10 +1,9 @@
 .t3xt-container
   font-family: "Roboto Mono", monospace
-  font-size: 2rem
-  padding: 0 100px  // Changed from "0 0 0 100px" to center with equal horizontal padding
+  font-size: 2.5rem
+  padding: 0 0 0 100px
   display: flex
   flex-direction: column
-  align-items: center  // Add this to center the flex children
   font-weight: 700
   color: #000
   height: 150px
@@ -14,20 +13,16 @@
   position: relative
   perspective: 1000px
   text-transform: uppercase
-  height: 20px
+  height: 50px // Fixed height from original
   margin-bottom: 10px
-  text-align: center  // Add this to center the text
-  width: 100%  // Add this to give it full width
 
 .t3xt
   transform-style: preserve-3d
   position: absolute
   top: 0
-  left: 50%  // Changed from "0" to "50%"
-  transform: translateX(-50%)  // Add this to center the element
+  left: 0
   // Math: transform-origin: 0 (height/2)px -(height/2)px
-  transform-origin: center 25px -25px  // Changed from "0" to "center"
-  white-space: nowrap  // Add this to prevent text wrapping
+  transform-origin: 0 25px -25px
 
 .t3xt-out
   animation: text-out .5s ease forwards
@@ -37,19 +32,19 @@
 
 @keyframes text-out
   to
-    transform: translateX(-50%) rotateX(90deg)  // Add translateX to maintain centering
+    transform: rotateX(90deg)
     opacity: 0
 
 @keyframes text-in
   from
     opacity: 0
-    transform: translateX(-50%) rotateX(-90deg)  // Add translateX to maintain centering
+    transform: rotateX(-90deg)
   to
-    transform: translateX(-50%) rotateX(0deg)  // Add translateX to maintain centering
+    transform: rotateX(0deg)
     opacity: 1
 
 .ref
-  position: relative
+
   color: #fff
   font-size: 12px
   text-decoration: none
