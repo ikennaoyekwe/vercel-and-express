@@ -5,9 +5,8 @@ import SvgGlobe from "./svgGlobe.jsx";
 export default function Lyrics({ svgOpacity, ip }) {
     const messageRef = useRef(null);
     const [runCount, setRunCount] = useState(0);
-    const fpsRef = useRef(0); // Use a ref so the interval can see the latest value without re-rendering
+    const fpsRef = useRef(0);
 
-    // --- 1. FPS COUNTER LOGIC (Independent) ---
     useEffect(() => {
         let frameId;
         let frameCount = 0;
