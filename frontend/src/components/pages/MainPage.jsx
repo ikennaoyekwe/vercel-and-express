@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import useInitParticles from "../../assets/js/mainPage/Particles.js";
 import {useScroll, useIp} from "../../assets/js/hooks/useIp_useScroll.js";
-import Svg_mainPage from "./pages_components/MainPage/svg_mainPage.jsx";
+import MainPageLogo from "./pages_components/MainPage/mainPageLogo.jsx";
 import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import TypeWriter from "./pages_components/MainPage/typeWriter.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
@@ -23,16 +23,9 @@ export default function MainPage() {
             </div>
             <br/><br/>
             <div className="flex flex-col min-h-[68.4vh] items-center justify-center">
-                <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 mt-44 z-20">
-                    <Svg_mainPage svgOpacity={svgOpacity} ip={ip}/>
+                <div id="svgImage" className="w-1/4 min-w-[350px] md:mt-0 z-20">
+                    <MainPageLogo svgOpacity={svgOpacity} ip={ip}/>
                 </div>
-                <div className="w-full flex justify-center select-none">
-                    <div className="ml-5 w-full max-w-[700px]">
-                        <CubeText/>
-                    </div>
-                    <NameTag svgOpacity={svgOpacity} classNames="hidden md:block"/>
-                </div>
-                <NameTag svgOpacity={svgOpacity} classNames="block md:hidden"/>
             </div>
             <div className="flex justify-center">
                 <div className="h-[800px]">Hello PUll Up Content</div>

@@ -1,14 +1,8 @@
-import React, {useEffect, useRef, useState} from "react";
-import SvgGlobe from "./svgGlobe.jsx";
+import React from "react";
 
-export default function Svg_mainPage({svgOpacity, ip}) {
+export default function Svg_Image_MainPage({svgOpacity}) {
     return (
-        <div className="relative w-full z-20">
-            {svgOpacity === 1 && (
-                <div className="z-20 w-[200px] h-[200px] under-hd:w-auto under-hd:h-auto under-hd:ml-[-2vw] under-hd:mt-[-2vh] under-hd:pt-[-50%] mt-[-15vh] pb-[50%] ml-[-15vw] under-2k:ml-[-25vw]">
-                    <SvgGlobe ip={ip} className="w-full h-full"/>
-                </div>
-            )}
+        <>
             <svg
                 width="100%"
                 height="auto"
@@ -61,6 +55,7 @@ export default function Svg_mainPage({svgOpacity, ip}) {
                     d="M0 0 C6.27 0 12.54 0 19 0 C19 17.16 19 34.32 19 52 C12.73 52 6.46 52 0 52 C0 34.84 0 17.68 0 0 Z "
                     fill="#url(#movingGradientt)" transform="translate(307,0)"/>
             </svg>
-        </div>
-    );
+
+        </>
+    )
 }

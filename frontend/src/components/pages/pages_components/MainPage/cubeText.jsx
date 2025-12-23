@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./cubeText.sass";
+import "../../../../assets/css/cubeText.sass";
 
 const PHRASES = [
     ["Senior FullStack Developer"],
@@ -44,7 +44,7 @@ const RotatingWord = ({ text }) => {
     );
 };
 
-export default function CubeText() {
+export default function CubeText({svgOpacity}) {
     const [phraseIndex, setPhraseIndex] = useState(0);
     const [wordIndex, setWordIndex] = useState(0);
 
@@ -69,7 +69,7 @@ export default function CubeText() {
     }, [wordIndex, phraseIndex]);
 
     return (
-        <div className="t3xt-container">
+        <div className="t3xt-container" style={{ opacity: svgOpacity}}>
             {/*
         We map through the current phrase.
         If wordIndex hasn't reached that word's index yet, we pass an empty string

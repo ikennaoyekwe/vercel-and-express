@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import CustomLink from "./CustomLink.jsx";
-import SvgImage from "../components/pages/pages_components/svg_image.jsx";
+import SvgImage from "../components/pages/pages_components/svg_image_header.jsx";
 
 export default function MobileHeader({ isMenuOpen, toggleMenu }) {
 
