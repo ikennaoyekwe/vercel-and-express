@@ -12,7 +12,7 @@ export default function MovingWave({ scrollState = 0 }) {
         <canvas
             id="wave-canvas"
             ref={canvasRef}
-            className="fixed bottom-0 w-full h-full z-10"
+            className="fixed bottom-0 w-full h-full z-10 pointer-events-none"
             style={{ width: "100%", height: "100%" }}
         />
     );

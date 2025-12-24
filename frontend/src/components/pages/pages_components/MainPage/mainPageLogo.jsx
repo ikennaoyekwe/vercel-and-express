@@ -7,9 +7,8 @@ import "../../../../assets/sass/globeContainer.sass";
 
 export default function MainPageLogo({svgOpacity, ip}) {
     return (
-        <div className="relative w-full mt-[25vh] z-30 pointer-events-none">
-
-            <div className={`globe-container ${svgOpacity === 1 ? "" : "globe-hidden"} relative z-40 pointer-events-auto`}>
+        <div className="relative w-full mt-[25vh] pointer-events-none">
+            <div className={`globe-container ${svgOpacity === 1 ? "" : "globe-hidden"} relative pointer-events-auto`}>
                 <SvgGlobe ip={ip} className="w-full h-full" />
             </div>
             <Svg_Image_MainPage svgOpacity={svgOpacity} className="w-full h-full pointer-events-none"/>

@@ -4,6 +4,7 @@ import {useScroll, useIp} from "../../assets/js/hooks/useIp_useScroll.js";
 import MainPageLogo from "./pages_components/MainPage/mainPageLogo.jsx";
 import MovingWave from "./pages_components/MainPage/movingWave.jsx";
 import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
+import ArashCard from "./pages_components/MainPage/arashCard.jsx";
 
 export default function MainPage() {
 
@@ -24,8 +25,10 @@ export default function MainPage() {
                     <MainPageLogo svgOpacity={svgOpacity} ip={ip}/>
                 </div>
             </div>
-            <div className="flex justify-center">
-                <div className="h-[800px]">Hello PUll Up Content</div>
+            <div className="flex justify-center pointer-events-auto">
+                <div className="h-[1000px] z-10 pointer-events-auto">
+                    <ArashCard/>
+                </div>
             </div>
             <MovingWave scrollState={100 - (svgOpacity * 100)}/>
             <canvas id="particles-canvas" ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none"/>

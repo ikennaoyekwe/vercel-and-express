@@ -85,7 +85,6 @@ const CanvasGlobe = memo(function CanvasGlobe({ width = 400, height = 400, ip })
 
     return (
         <canvas
-            className="z-30"
             ref={canvasRef}
             style={{ width, height, cursor: 'grab', touchAction: 'none' }}
             onMouseDown={onMouseDown}

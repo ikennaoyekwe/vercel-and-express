@@ -172,7 +172,7 @@ export function init(canvasElement) {
 
     updateSize(); // Calculate width/height first
     window.addEventListener('resize', updateSize);
-    canvasElement.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', onMouseMove);
 
     initScene(); // Create plane using calculated sizes
     animate();   // Start loop
@@ -205,7 +205,7 @@ export function init(canvasElement) {
         cleanup: () => {
             cancelAnimationFrame(animationId);
             window.removeEventListener('resize', updateSize);
-            canvasElement.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mousemove', onMouseMove);
 
             if (scene) {
                 scene.traverse((object) => {
