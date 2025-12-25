@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .card {
   position: relative;
   z-index: 9999 !important; /* Force it above the globe's 40 */
@@ -184,8 +186,9 @@
 
     &:hover {
       svg {
-        fill: darken(rgb(165, 181, 206), 20%);
-    }
+        fill: color.adjust(rgb(165, 181, 206), $lightness: -20%);
+
+      }
   }
 
     &:last-child {
@@ -294,8 +297,8 @@ opacity: 1;
     color: rgba(#868686, 0.7);
     background: linear-gradient(
       to bottom,
-    lighten(#516acc, 20%) 0%,
-      #516acc 100%
+      color.adjust(#516acc, $lightness: 20%) 0%,
+                    #516acc 100%
   );
 }
 }
