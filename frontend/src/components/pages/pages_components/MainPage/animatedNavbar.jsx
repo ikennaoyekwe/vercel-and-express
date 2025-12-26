@@ -74,6 +74,32 @@ const AnimatedNavbar = () => {
         nav.style.mask = maskStyle;
     };
 
+    const drawShape = (context, isMask) => {
+        const { width } = animationRef.current;
+        const p = pointsRef.current;
+
+        context.beginPath();
+        context.moveTo(p.topLeft, 0);
+        context.lineTo(p.topLeft, p.topY);
+        context.bezierCurveTo(p.bottomLeft, p.bottomY, p.bottomRight, p.bottomY, p.topRight, p.topY);
+        context.lineTo(p.topRight, 0);
+        context.lineTo(width, 0);
+        context.lineTo(0, 0);
+        context.closePath();
+
+        if(!isMask) {
+            // Main Background: White with slight transparency
+            context.fillStyle = 'rgba(255, 255, 255, 1)';
+            context.shadowColor = 'rgba(0,0,0,0.9)';
+            context.shadowBlur = 10;
+        } else {
+            // MASK OPACITY: This makes the nav content (logo/links) translucent
+            // 0.4 means 40% visible. Adjust this number to change opacity.
+            context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        }
+        context.fill();
+    };
+
     const drawPath = () => {
         const canvas = canvasRef.current;
         const maskCanvas = maskCanvasRef.current;
@@ -87,34 +113,37 @@ const AnimatedNavbar = () => {
         ctx.clearRect(0, 0, width, endY);
         maskCtx.clearRect(0, 0, width, endY);
 
-        const drawShape = (context, isMask) => {
-            context.beginPath();
-            context.moveTo(p.topLeft, 0);
-            context.lineTo(p.topLeft, p.topY);
-            context.bezierCurveTo(p.bottomLeft, p.bottomY, p.bottomRight, p.bottomY, p.topRight, p.topY);
-            context.lineTo(p.topRight, 0);
-            context.lineTo(width, 0);
-            context.lineTo(0, 0);
-            context.closePath();
-
-            if(!isMask) {
-                context.shadowColor = 'rgba(0,0,0,0.15)';
-                context.shadowBlur = 15;
-                context.fillStyle = '#FFF';
-            } else {
-                context.fillStyle = '#000'; // Mask uses black for visible areas
-            }
-            context.fill();
-        };
-
-        ctx.save();
+        // --- STEP A: DRAW THE FILLS ---
         drawShape(ctx, false);
-        ctx.restore();
-
-        maskCtx.save();
         drawShape(maskCtx, true);
-        maskCtx.restore();
 
+        // --- STEP B: PASTE THE COLORFUL BORDER CODE HERE ---
+        ctx.save();
+        const time = Date.now() * 0.0015;
+        const x0 = (Math.sin(time) * width * 0.8); // Movement logic
+
+        const grd = ctx.createLinearGradient(x0, 0, x0 + width, 0);
+        grd.addColorStop(0, "rgba(255, 255, 255, 0)");
+        grd.addColorStop(0.2, "rgba(99, 102, 241, 0.8)");
+        grd.addColorStop(0.4, "rgba(236, 72, 153, 0.9)");
+        grd.addColorStop(0.6, "rgba(0, 212, 255, 1)");
+        grd.addColorStop(0.8, "rgba(52, 211, 153, 0.8)");
+        grd.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = "rgba(0, 212, 255, 0.6)";
+        ctx.strokeStyle = grd;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+
+        ctx.beginPath();
+        ctx.moveTo(p.topLeft, p.topY);
+        ctx.bezierCurveTo(p.bottomLeft, p.bottomY, p.bottomRight, p.bottomY, p.topRight, p.topY);
+        ctx.stroke();
+        ctx.restore();
+        // --- END OF BORDER CODE ---
+
+        // --- STEP C: FINISH DRAWING ---
         drawArrow(ctx);
         updateNavMask();
     };
@@ -220,6 +249,7 @@ const AnimatedNavbar = () => {
 
     return (
         <header style={{
+            opacity: 0.9,
             position: 'fixed',
             top: 0,
             left: 0,
@@ -245,7 +275,7 @@ const AnimatedNavbar = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'flex-start',
-                    padding: '39px 50px',
+                    padding: '40px 50px',
                     pointerEvents: 'none',
                     transform: 'translateY(-18px)',
                     paddingTop: '30px' // Compensate for the transform shift
