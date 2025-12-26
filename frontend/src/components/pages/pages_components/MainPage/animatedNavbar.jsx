@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 const AnimatedNavbar = () => {
     const canvasRef = useRef(null);
     const maskCanvasRef = useRef(null);
-    const navRef = useRef(null);
+    const navRef = useRef(null); // This will now strictly be the mask target
 
     const pointsRef = useRef({
         topLeft: 25,
@@ -17,20 +17,24 @@ const AnimatedNavbar = () => {
         endY: 30,
     });
 
-    const arrowRef = useRef({ width: 30, height: 7, lineWidth: 3 });
+    const arrowRef = useRef({
+        width: 30,
+        height: 7,
+        lineWidth: 3,
+    });
 
     const animationRef = useRef({
         tl: null,
         openTL: null,
         progress: 0,
-        gradientOffset: 0, // Used to animate the stroke colors
         maxTimeline: 0.6,
         winPointerY: 0,
+        hover: false,
         isOpen: false,
         width: 0,
         height: 0,
         endX: 100,
-        endY: 130,
+        endY: 130, // Fixed height for the header area
     });
 
     const steps = [
@@ -40,6 +44,36 @@ const AnimatedNavbar = () => {
         [-0.1, 0.66, 0.25, 1, 0.75, 1, 1.10, 0.66]
     ];
 
+    const drawArrow = (ctx) => {
+        const { width, endY } = animationRef.current;
+        const arrow = arrowRef.current;
+        ctx.save();
+        const x = width / 2;
+        const y = endY - 24;
+        ctx.beginPath();
+        ctx.moveTo(x - arrow.width / 2, y - arrow.height / 2);
+        ctx.lineTo(x, y + arrow.height / 2);
+        ctx.lineTo(x + arrow.width / 2, y - arrow.height / 2);
+        ctx.strokeStyle = '#696969';
+        ctx.lineWidth = arrow.lineWidth;
+        ctx.lineCap = "round";
+        ctx.stroke();
+        ctx.restore();
+    };
+
+    const updateNavMask = () => {
+        const maskCanvas = maskCanvasRef.current;
+        const nav = navRef.current;
+        if (!maskCanvas || !nav) return;
+
+        // Convert canvas to image for the mask
+        const maskDataUrl = maskCanvas.toDataURL();
+        const maskStyle = `url(${maskDataUrl}) top left / 100% 130px no-repeat`;
+
+        nav.style.webkitMask = maskStyle;
+        nav.style.mask = maskStyle;
+    };
+
     const drawPath = () => {
         const canvas = canvasRef.current;
         const maskCanvas = maskCanvasRef.current;
@@ -47,7 +81,7 @@ const AnimatedNavbar = () => {
 
         const ctx = canvas.getContext('2d');
         const maskCtx = maskCanvas.getContext('2d');
-        const { width, endY, gradientOffset } = animationRef.current;
+        const { width, endY } = animationRef.current;
         const p = pointsRef.current;
 
         ctx.clearRect(0, 0, width, endY);
@@ -63,34 +97,14 @@ const AnimatedNavbar = () => {
             context.lineTo(0, 0);
             context.closePath();
 
-            if (!isMask) {
-                // 1. ADD OPACITY TO FILL
-                context.fillStyle = 'rgba(255, 255, 255, 0.85)';
-
-                // 2. GLOWING SHADOW
-                context.shadowColor = 'rgba(102, 126, 234, 0.5)';
-                context.shadowBlur = 20;
-                context.fill();
-
-                // 3. MOVING GRADIENT BORDER (The "Moving Line")
-                // We create a gradient that shifts based on gradientOffset
-                const grad = context.createLinearGradient(
-                    gradientOffset * width, 0,
-                    (gradientOffset + 0.5) * width, endY
-                );
-                grad.addColorStop(0, '#667eea'); // Purple/Blue
-                grad.addColorStop(0.5, '#764ba2'); // Deep Purple
-                grad.addColorStop(1, '#667eea'); // Loop back
-
-                context.strokeStyle = grad;
-                context.lineWidth = 3;
-                context.lineCap = 'round';
-                context.shadowBlur = 0; // Disable shadow for the stroke line itself
-                context.stroke();
+            if(!isMask) {
+                context.shadowColor = 'rgba(0,0,0,0.15)';
+                context.shadowBlur = 15;
+                context.fillStyle = '#FFF';
             } else {
-                context.fillStyle = '#000';
-                context.fill();
+                context.fillStyle = '#000'; // Mask uses black for visible areas
             }
+            context.fill();
         };
 
         ctx.save();
@@ -101,29 +115,8 @@ const AnimatedNavbar = () => {
         drawShape(maskCtx, true);
         maskCtx.restore();
 
-        // Draw arrow
-        const arrow = arrowRef.current;
-        ctx.save();
-        const ax = width / 2;
-        const ay = endY - 24;
-        ctx.beginPath();
-        ctx.moveTo(ax - arrow.width / 2, ay - arrow.height / 2);
-        ctx.lineTo(ax, ay + arrow.height / 2);
-        ctx.lineTo(ax + arrow.width / 2, ay - arrow.height / 2);
-        ctx.strokeStyle = '#696969';
-        ctx.lineWidth = arrow.lineWidth;
-        ctx.lineCap = "round";
-        ctx.stroke();
-        ctx.restore();
-
-        // Update CSS Mask
-        const maskDataUrl = maskCanvas.toDataURL();
-        const maskStyle = `url(${maskDataUrl}) top left / 100% 130px no-repeat`;
-        const nav = navRef.current;
-        if(nav) {
-            nav.style.webkitMask = maskStyle;
-            nav.style.mask = maskStyle;
-        }
+        drawArrow(ctx);
+        updateNavMask();
     };
 
     const offsetCoords = (val, i) => {
@@ -181,15 +174,6 @@ const AnimatedNavbar = () => {
 
         openTL.to(arrowRef.current, { duration: 0.4, height: -7 }, 0.4);
 
-        // INFINITE GRADIENT ANIMATION
-        gsap.to(animationRef.current, {
-            gradientOffset: 2, // Moves the gradient points across the width
-            duration: 3,
-            repeat: -1,
-            ease: "none",
-            onUpdate: drawPath
-        });
-
         animationRef.current.tl = tl;
         animationRef.current.openTL = openTL;
         drawPath();
@@ -222,6 +206,7 @@ const AnimatedNavbar = () => {
         const handlePointerMove = (e) => {
             animationRef.current.winPointerY = e.touches ? e.touches[0].clientY : e.clientY;
         };
+
         window.addEventListener('resize', handleResize);
         window.addEventListener('mousemove', handlePointerMove);
         gsap.ticker.add(render);
@@ -235,26 +220,70 @@ const AnimatedNavbar = () => {
 
     return (
         <header style={{
-            position: 'fixed', top: 0, left: 0, width: '100%', height: '100px',
-            zIndex: 0, pointerEvents: 'none', overflow: 'visible'
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100px', // Your reduced height
+            zIndex: 9999,
+            pointerEvents: 'none',
+            overflow: 'hidden'
         }}>
+            {/* Hidden mask source */}
             <canvas ref={maskCanvasRef} style={{ display: 'none' }} />
+
+            {/* Background Canvas - Match the shift you made */}
             <canvas ref={canvasRef} style={{ position: 'absolute', top: -18, left: 0 }} />
 
-            <nav ref={navRef} style={{
-                position: 'relative', width: '100%', height: '100%',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-                padding: '35px 50px', pointerEvents: 'none',
-                transform: 'translateY(-18px)', paddingTop: '30px',
-                backdropFilter: 'blur(5px)' // Optional: adds a glassmorphism effect
-            }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a1a1a', pointerEvents: 'auto', cursor: 'pointer', transform: 'translateY(2px)' }}>
+            {/* Content area */}
+            <nav
+                ref={navRef}
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    padding: '39px 50px',
+                    pointerEvents: 'none',
+                    transform: 'translateY(-18px)',
+                    paddingTop: '30px' // Compensate for the transform shift
+                }}
+            >
+                <div
+                    style={{
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        color: '#333',
+                        pointerEvents: 'auto',
+                        cursor: 'pointer',
+                        transform: 'translateY(2px)',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                >
                     MyBrand
                 </div>
-                <ul style={{ display: 'flex', gap: '40px', listStyle: 'none', pointerEvents: 'auto', margin: 0, padding: 0, transform: 'translateY(8px)' }}>
+
+                <ul style={{
+                    display: 'flex',
+                    gap: '40px',
+                    listStyle: 'none',
+                    pointerEvents: 'auto',
+                    margin: 0,
+                    padding: 0,
+                    // Align links vertically with the logo
+                    transform: 'translateY(8px)'
+                }}>
                     {['Home', 'About', 'Services', 'Portfolio', 'Contact'].map((item) => (
                         <li key={item}>
-                            <a href={`#${item.toLowerCase()}`} style={{ color: '#333', textDecoration: 'none', fontSize: '16px', fontWeight: 600 }}>
+                            <a href={`#${item.toLowerCase()}`} style={{
+                                color: '#333',
+                                textDecoration: 'none',
+                                fontSize: '16px',
+                                fontWeight: 500
+                            }}>
                                 {item}
                             </a>
                         </li>
