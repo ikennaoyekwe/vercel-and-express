@@ -31,6 +31,8 @@
   transform: translateY(2px)
   display: flex
   align-items: center
+  @media(max-width: 768px)
+    display: none
 
 .list
   display: flex
@@ -46,3 +48,21 @@
   text-decoration: none
   font-size: 1rem
   font-weight: 500
+
+@media (max-width: 768px)
+  .navv
+    justify-content: center
+    align-items: center
+    transform: translateY(0)
+    pointer-events: auto
+
+  .list
+    display: flex
+    justify-content: center
+    gap: 25px
+    transform: translateY(0)
+    width: 100%
+    margin-bottom: 50px
+
+  .links
+    text-align: center
