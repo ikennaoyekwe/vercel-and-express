@@ -13,6 +13,9 @@ export default {
         'under-hd': {
           max: '1570px',
         },
+        'smallMobile': {
+          max: '768px',
+        },
       },
     },
   },

@@ -16,7 +16,7 @@ export default function MainPage() {
 
     return (
         <div>
-            <div id="lyrics" className={`fixed max-w-[70vw] md:max-w-[48vw] h-[50px] ${svgOpacity < 0.9 ? "top-[-20px]" : ""}`}>
+            <div id="lyrics" className={`fixed smallMobile:top-[10%] max-w-[70vw] md:max-w-[48vw] h-[50px] ${svgOpacity < 0.9 ? "top-[-20px]" : ""}`}>
                 <Lyrics svgOpacity={svgOpacity} ip={ip}/>
             </div>
             <br/><br/>
