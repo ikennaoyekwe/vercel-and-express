@@ -3,7 +3,7 @@ import Footer from "./Footer.jsx";
 import { Outlet } from "react-router-dom";
 import DesktopHeader from "./DesktopHeader.jsx";
 import MobileHeader from "./MobileHeader.jsx";
-import AnimatedNavbar from "../components/pages/pages_components/MainPage/animatedNavbar.jsx";
+import AnimatedHeader from "./AnimatedHeader.jsx";
 
 export default function MainLayout() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +12,7 @@ export default function MainLayout() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <AnimatedNavbar/>
+            <AnimatedHeader/>
             {/*<MobileHeader isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}/>*/}
             <main style={{overflow: 'hidden'}} onClick={closeMenu} className="mainWindow flex-grow">
                 <Outlet />

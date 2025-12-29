@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import "../assets/sass/animatedHeader.sass";
 import { gsap } from 'gsap';
+import {Link} from "react-router-dom";
 
-const AnimatedNavbar = () => {
+const AnimatedHeader = () => {
     const canvasRef = useRef(null);
     const maskCanvasRef = useRef(null);
     const navRef = useRef(null); // This will now strictly be the mask target
@@ -248,74 +250,19 @@ const AnimatedNavbar = () => {
     }, []);
 
     return (
-        <header style={{
-            opacity: 0.9,
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100px', // Your reduced height
-            zIndex: 9999,
-            pointerEvents: 'none',
-            overflow: 'hidden'
-        }}>
-            {/* Hidden mask source */}
+        <header className="headerr">
+            {/* Hidden mask */}
             <canvas ref={maskCanvasRef} style={{ display: 'none' }} />
-
-            {/* Background Canvas - Match the shift you made */}
+            {/* Background Canvas */}
             <canvas ref={canvasRef} style={{ position: 'absolute', top: -18, left: 0 }} />
-
-            {/* Content area */}
-            <nav
-                ref={navRef}
-                style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    padding: '40px 50px',
-                    pointerEvents: 'none',
-                    transform: 'translateY(-18px)',
-                    paddingTop: '30px' // Compensate for the transform shift
-                }}
-            >
-                <div
-                    style={{
-                        fontSize: '24px',
-                        fontWeight: 'bold',
-                        color: '#333',
-                        pointerEvents: 'auto',
-                        cursor: 'pointer',
-                        transform: 'translateY(2px)',
-                        display: 'flex',
-                        alignItems: 'center'
-                    }}
-                >
-                    MyBrand
-                </div>
-
-                <ul style={{
-                    display: 'flex',
-                    gap: '40px',
-                    listStyle: 'none',
-                    pointerEvents: 'auto',
-                    margin: 0,
-                    padding: 0,
-                    // Align links vertically with the logo
-                    transform: 'translateY(8px)'
-                }}>
-                    {['Home', 'About', 'Services', 'Portfolio', 'Contact'].map((item) => (
+            <nav className="navv" ref={navRef}>
+                <div className="logo">Salamander</div>
+                <ul className="list">
+                    {['Home', 'About', 'Tech-Stack', 'Contact'].map((item) => (
                         <li key={item}>
-                            <a href={`#${item.toLowerCase()}`} style={{
-                                color: '#333',
-                                textDecoration: 'none',
-                                fontSize: '16px',
-                                fontWeight: 500
-                            }}>
+                            <Link to={item.toLowerCase()} className="links">
                                 {item}
-                            </a>
+                            </Link>
                         </li>
                     ))}
                 </ul>
@@ -324,4 +271,4 @@ const AnimatedNavbar = () => {
     );
 };
 
-export default AnimatedNavbar;
+export default AnimatedHeader;

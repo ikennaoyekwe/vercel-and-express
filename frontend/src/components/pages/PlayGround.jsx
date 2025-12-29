@@ -1,9 +1,9 @@
 import React from "react";
-import AnimatedNavbar from "./pages_components/MainPage/animatedNavbar.jsx";
+import AnimatedHeader from "../../layouts/AnimatedHeader.jsx";
 
 export default function PlayGround() {
 
     return (
-        <AnimatedNavbar/>
+        <AnimatedHeader/>
     )
 }

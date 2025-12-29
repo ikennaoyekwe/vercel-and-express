@@ -20,9 +20,10 @@ function AnimatedRoutes() {
                 <Route path="/" element={<MainLayout/>}>
 
                     <Route path="/" element={<MainPage/>}/>
-                    <Route path="/aboutMe" element={<AbouteMe/>}/>
-                    <Route path="/contactMe" element={<ContactMe/>}/>
-                    <Route path="/techStacks" element={<TechStack/>}/>
+                    <Route path="/home" element={<MainPage/>}/>
+                    <Route path="/about" element={<AbouteMe/>}/>
+                    <Route path="/contact" element={<ContactMe/>}/>
+                    <Route path="/tech-stack" element={<TechStack/>}/>
 
                     <Route path="*" element={<NotFound404/>}/>
                 </Route>
