@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import "../assets/sass/animatedHeader.sass";
 import { gsap } from 'gsap';
 import {Link} from "react-router-dom";
+import SvgImage from "../components/pages/pages_components/svg_image_header.jsx";
 
 const AnimatedHeader = () => {
     const canvasRef = useRef(null);
@@ -256,7 +257,9 @@ const AnimatedHeader = () => {
             {/* Background Canvas */}
             <canvas ref={canvasRef} style={{ position: 'absolute', top: -18, left: 0 }} />
             <nav className="navv" ref={navRef}>
-                <div className="logo">Salamander</div>
+                <div className="logo">
+                    <SvgImage/>
+                </div>
                 <ul className="list">
                     {['Home', 'About', 'Tech-Stack', 'Contact'].map((item) => (
                         <li key={item}>
