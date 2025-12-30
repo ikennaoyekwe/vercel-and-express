@@ -7,10 +7,7 @@ import Lyrics from "./pages_components/MainPage/Lyrics.jsx";
 import ArashCard from "./pages_components/MainPage/arashCard.jsx";
 
 export default function MainPage() {
-
-    // @todo : console.log(window.navigator.hardwareConcurrency + " | " + window.navigator.deviceMemory);
     const [waveLoaded, setWaveLoaded] = useState(false);
-    const [isLowPower, setIsLowPower] = useState(false);
     const svgOpacity = useScroll();
     const canvasRef = useInitParticles();
     const ip = useIp();

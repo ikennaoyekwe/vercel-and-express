@@ -2,22 +2,34 @@
 
 .card {
   position: relative;
-  z-index: 9999 !important; /* Force it above the globe's 40 */
+  z-index: 9999 !important;
   pointer-events: auto !important;
-  max-width: 450px;
+  max-width: 500px;
   margin: auto;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: rgba(255, 255, 255, 1);
+
+  /* 1. Opacity and Glass Effect */
+  background-color: rgba(255, 255, 255, 0.8); // Change alpha from 1 to 0.8
+  backdrop-filter: blur(10px); // Optional: makes the background blur beautifully
+
   display: flex;
   transition: 0.3s;
   flex-direction: column;
   border-radius: 10px;
   box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.2);
+
+  /* 2. Hide Scrollbar for all browsers */
+  scrollbar-width: none;            /* Firefox */
+  -ms-overflow-style: none;         /* IE and Edge */
+
+  &::-webkit-scrollbar {
+    display: none;                  /* Chrome, Safari, and Opera */
+  }
 }
 
 .card[data-state="#about"] {
-  height: 500px;
+  height: 600px;
   .card-main {
     padding-top: 0;
 }

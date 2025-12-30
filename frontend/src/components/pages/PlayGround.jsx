@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import AnimatedHeader from "../../layouts/AnimatedHeader.jsx";
 
 export default function PlayGround() {
 
     return (
-        <AnimatedHeader/>
+        <div>
+            Hello world
+        </div>
     )
 }
