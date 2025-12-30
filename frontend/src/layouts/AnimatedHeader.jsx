@@ -20,7 +20,6 @@ const AnimatedHeader = () => {
         endY: 30,
     });
 
-    // ... (Keep arrowRef, animationRef, and steps as they are) ...
     const arrowRef = useRef({ width: 30, height: 7, lineWidth: 3 });
     const animationRef = useRef({
         tl: null, openTL: null, progress: 0, maxTimeline: 0.6,
@@ -54,13 +53,12 @@ const AnimatedHeader = () => {
         ctx.lineTo(width, 0);
         ctx.lineTo(0, 0);
         ctx.closePath();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.shadowColor = 'rgba(0,0,0,0.3)';
         ctx.shadowBlur = 10;
         ctx.fill();
 
-        // 2. Update SVG Path (This replaces the Mask Canvas)
-        // We construct the path string manually
+        // 2. Update SVG Path ( Replace Canvas Mask For Optimization )
         const d = `M ${p.topLeft} 0 
                    L ${p.topLeft} ${p.topY} 
                    C ${p.bottomLeft} ${p.bottomY}, ${p.bottomRight} ${p.bottomY}, ${p.topRight} ${p.topY} 
@@ -69,7 +67,7 @@ const AnimatedHeader = () => {
                    L 0 0 Z`;
         svgPathRef.current.setAttribute('d', d);
 
-        // 3. Draw the Animated Border (Your existing logic)
+        // 3. Draw the Animated Border
         ctx.save();
         const time = Date.now() * 0.0015;
         const x0 = (Math.sin(time) * width * 0.8);
@@ -110,8 +108,7 @@ const AnimatedHeader = () => {
         ctx.restore();
     };
 
-    // ... (Keep offsetCoords, stretchCoords, setRatio, render, and useEffect exactly as they are) ...
-    // Just remove references to maskCanvasRef inside setRatio
+    // Removed references to maskCanvasRef inside setRatio
     const offsetCoords = (val, i) => {
         const { endX, endY } = animationRef.current;
         if (i % 2 === 0) {
