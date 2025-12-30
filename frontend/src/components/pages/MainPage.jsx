@@ -9,6 +9,7 @@ import ArashCard from "./pages_components/MainPage/arashCard.jsx";
 export default function MainPage() {
 
     // @todo : console.log(window.navigator.hardwareConcurrency + " | " + window.navigator.deviceMemory);
+    const [waveLoaded, setWaveLoaded] = useState(false);
     const [isLowPower, setIsLowPower] = useState(false);
     const svgOpacity = useScroll();
     const canvasRef = useInitParticles();
@@ -16,7 +17,7 @@ export default function MainPage() {
 
     return (
         <div>
-            <div id="lyrics" className={`fixed smallMobile:top-[10%] max-w-[70vw] md:max-w-[48vw] h-[50px] ${svgOpacity < 0.9 ? "top-[-20px]" : ""}`}>
+            <div id="lyrics" className={`fixed smallMobile:top-[10%] max-w-[70vw] md:max-w-[48vw] h-[50px] ${svgOpacity < 0.9 ? "top-[-20px]" : "top-[20px]"}`}>
                 <Lyrics svgOpacity={svgOpacity} ip={ip}/>
             </div>
             <br/><br/>
@@ -27,10 +28,10 @@ export default function MainPage() {
             </div>
             <div className="flex justify-center pointer-events-auto">
                 <div className="h-[1000px] z-10 pointer-events-auto">
-                    <ArashCard/>
+                    {waveLoaded && <ArashCard/>}
                 </div>
             </div>
-            <MovingWave scrollState={100 - (svgOpacity * 100)}/>
+            <MovingWave scrollState={100 - (svgOpacity * 100)} onComplete={()=>setWaveLoaded(true)} />
             <canvas id="particles-canvas" ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none"/>
         </div>
     );
