@@ -71,7 +71,7 @@ const DotedGlobe = () => {
             tempCtx.textAlign = 'center';
             tempCtx.textBaseline = 'middle';
             tempCtx.fillStyle = 'white';
-            tempCtx.font = `bold ${sampleW / 5}px Arial`;
+            tempCtx.font = `bold ${sampleW / 4.5}px "Courier New", monospace`;
             tempCtx.fillText(text, sampleW / 2, sampleH / 2);
 
             const imageData = tempCtx.getImageData(0, 0, sampleW, sampleH).data;
