@@ -45,12 +45,12 @@ const DotedGlobe = () => {
             // Optional: make dots slightly larger when they form the text
             const finalSize = sizeProjection + (1.2 - sizeProjection) * p;
 
-            // ctx.beginPath();
-            // ctx.arc(finalX, finalY, DOT_RADIUS * finalSize, 0, Math.PI * 2);
-            // ctx.fill();
+            ctx.beginPath();
+            ctx.arc(finalX, finalY, DOT_RADIUS * finalSize, 0, Math.PI * 2);
+            ctx.fill();
             // Bello code ( Much Faster )
-            const size = DOT_RADIUS * finalSize * 2;
-            ctx.fillRect(finalX - size/2, finalY - size/2, size, size);
+            // const size = DOT_RADIUS * finalSize * 2;
+            // ctx.fillRect(finalX - size/2, finalY - size/2, size, size);
         }
     }
 
